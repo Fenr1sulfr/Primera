@@ -1,2 +1,4 @@
 #include "_implants.dm"
 #include "code/implant_cqc.dm"
+#include "code/implant_mantis_blades.dm"
+#include "code/implant_sandevistan.dm"
