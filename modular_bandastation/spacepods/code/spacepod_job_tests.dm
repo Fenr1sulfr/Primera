@@ -32,7 +32,9 @@
 	TEST_ASSERT(!(ACCESS_ROBOTICS in card_access), "Spacepod Technician unexpectedly received robotics access.")
 	var/obj/machinery/mecha_part_fabricator/spacepod/fabricator = allocate(__IMPLIED_TYPE__)
 	TEST_ASSERT(fabricator.allowed(human), "Spacepod Technician cannot use the engineering pod fabricator.")
-	TEST_ASSERT(istype(human.ears, /obj/item/radio/headset/headset_eng), "Spacepod Technician did not receive an engineering headset.")
+	// AI EDIT START - Use the right ear slot for existing equipment
+	TEST_ASSERT(istype(human.ear_right, /obj/item/radio/headset/headset_eng), "Spacepod Technician did not receive an engineering headset.")
+	// AI EDIT END
 	var/obj/item/storage/backpack/backpack = human.back
 	TEST_ASSERT(istype(backpack), "Spacepod Technician did not receive a backpack.")
 	TEST_ASSERT(locate(/obj/item/pod_paint_bucket) in backpack, "Spacepod Technician's backpack has no pod paint bucket.")

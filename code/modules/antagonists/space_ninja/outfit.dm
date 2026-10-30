@@ -3,7 +3,9 @@
 	uniform = /obj/item/clothing/under/syndicate/ninja
 	glasses = /obj/item/clothing/glasses/night
 	mask = /obj/item/clothing/mask/gas/ninja
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/jackboots
 	suit_store = /obj/item/storage/belt/sheath/ninja
 	l_pocket = /obj/item/grenade/c4/ninja

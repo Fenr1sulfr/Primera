@@ -379,3 +379,49 @@
 	var/obj/item/pillow/pillow = EASY_ALLOCATE()
 	var/pillow_quality = UNLINT(surgery.get_tool_quality(pillow))
 	TEST_ASSERT_EQUAL(pillow_quality, 0, "Incise skin surgery returned a non-zero tool quality for a pillow, which is not a valid generic scalpel substitute")
+
+/// Manual surgical steps must calculate failure normally and retain the patient's pain penalty.
+/datum/unit_test/surgery_manual_failure_chance/Run()
+	var/mob/living/carbon/human/patient = allocate(/mob/living/carbon/human/consistent)
+	var/mob/living/carbon/human/surgeon = allocate(/mob/living/carbon/human/consistent)
+	var/obj/item/hemostat/tool = allocate(/obj/item/hemostat)
+	var/datum/surgery_operation/limb/remove_dental_implant/surgery = GLOB.operations.operations_by_typepath[__IMPLIED_TYPE__]
+	var/list/operation_args = list(OPERATION_SPEED = 1)
+	var/manual_chance = surgery.get_modified_failure_chance(surgery.time, patient, surgeon, IMPLEMENT_HAND, operation_args)
+	TEST_ASSERT_NOTNULL(manual_chance, "A manual surgical step aborted its failure calculation.")
+	TEST_ASSERT(manual_chance >= 40, "An awake organic patient's manual surgery ignored pain.")
+	var/tool_chance = surgery.get_modified_failure_chance(surgery.time, patient, surgeon, tool, operation_args)
+	TEST_ASSERT_EQUAL(tool_chance - manual_chance, 5, "Manual surgery inherited a physical instrument's failure penalty.")
+	ADD_TRAIT(patient, TRAIT_ANALGESIA, TRAIT_SOURCE_UNIT_TESTS)
+	TEST_ASSERT_EQUAL(manual_chance - surgery.get_modified_failure_chance(surgery.time, patient, surgeon, IMPLEMENT_HAND, operation_args), 40, "Anesthesia did not remove the manual surgery's pain penalty.")
+
+/// Successful organ manipulation must move the organ, rather than only displaying a success message.
+/datum/unit_test/organ_manipulation_transfer/Run()
+	var/mob/living/carbon/human/patient = allocate(/mob/living/carbon/human/consistent)
+	var/mob/living/carbon/human/surgeon = allocate(/mob/living/carbon/human/consistent)
+	var/obj/item/bodypart/chest/chest = patient.get_bodypart(BODY_ZONE_CHEST)
+	chest.add_surgical_state(SURGERY_SKIN_OPEN|SURGERY_ORGANS_CUT|SURGERY_BONE_SAWED)
+	var/obj/item/organ/liver/liver = patient.get_organ_slot(ORGAN_SLOT_LIVER)
+	var/obj/item/hemostat/tool = allocate(/obj/item/hemostat)
+	var/datum/surgery_operation/limb/organ_manipulation/internal/surgery = GLOB.operations.operations_by_typepath[__IMPLIED_TYPE__]
+	var/list/remove_options = surgery.get_radial_options(chest, tool, BODY_ZONE_CHEST)
+	var/list/remove_args
+	for(var/option in remove_options)
+		var/list/option_args = remove_options[option]
+		if(option_args["removed_organ"] == liver)
+			remove_args = option_args
+			break
+	TEST_ASSERT_NOTNULL(remove_args, "The liver has no removal option in its prepared chest.")
+	UNLINT(surgery.success(chest, surgeon, tool, remove_args))
+	TEST_ASSERT_NULL(liver.owner, "A successful removal left the liver in its patient.")
+	allocated += liver
+	TEST_ASSERT_NULL(patient.get_organ_slot(ORGAN_SLOT_LIVER), "The removed liver still occupies its organ slot.")
+	TEST_ASSERT_EQUAL(liver.loc, patient.drop_location(), "The removed liver did not reach the floor.")
+	surgeon.put_in_active_hand(liver)
+	var/list/insert_options = surgery.get_radial_options(chest, liver, BODY_ZONE_CHEST)
+	TEST_ASSERT_EQUAL(length(insert_options), 1, "The removed liver has no unique insertion option.")
+	var/list/insert_args = insert_options[insert_options[1]]
+	insert_args[OPERATION_TARGET_ZONE] = BODY_ZONE_CHEST
+	UNLINT(surgery.success(chest, surgeon, liver, insert_args))
+	TEST_ASSERT_EQUAL(liver.owner, patient, "A successful insertion did not restore the liver's owner.")
+	TEST_ASSERT_EQUAL(patient.get_organ_slot(ORGAN_SLOT_LIVER), liver, "The reinserted liver did not occupy its organ slot.")

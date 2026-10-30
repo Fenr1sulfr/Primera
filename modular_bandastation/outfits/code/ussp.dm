@@ -53,7 +53,9 @@
 	shoes = /obj/item/clothing/shoes/jackboots
 	head = /obj/item/clothing/head/hats/ussp_command
 	mask = /obj/item/cigarette/pipe
-	ears = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/thermal/eyepatch/tsf_commander
 	accessory = /obj/item/clothing/accessory/holster/tacticool/ussp_commander
 	r_pocket = /obj/item/storage/box/matches
@@ -79,7 +81,9 @@
 		/obj/item/lighter/greyscale,
 	)
 	head = /obj/item/clothing/head/hats/ussp
-	ears = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/jackboots
 
 /datum/id_trim/ussp/soldier
@@ -106,7 +110,9 @@
 	back = /obj/item/gun/ballistic/rifle/boltaction/army/tactical
 	r_pocket = /obj/item/radio/off
 	backpack_contents = null
-	ears = null
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = null
+	// AI EDIT END
 	belt = /obj/item/storage/belt/military/army/ussp/full_rifle
 	l_pocket = /obj/item/knife/combat
 
@@ -129,7 +135,9 @@
 	)
 	head = /obj/item/clothing/head/hats/ussp_officer
 	gloves = /obj/item/clothing/gloves/combat
-	ears = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/jackboots
 	belt = /obj/item/storage/belt/military/army/ussp/full
 
@@ -157,7 +165,9 @@
 	gloves = /obj/item/clothing/gloves/combat
 	mask = /obj/item/clothing/mask/balaclava/breath
 	head = /obj/item/clothing/head/helmet/marine/security/ussp_kaska
-	ears = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT END
 	belt = /obj/item/storage/belt/military/army/ussp/full_autorifle
 	l_pocket = /obj/item/knife/combat
 
@@ -284,7 +294,9 @@
 	)
 	head = /obj/item/clothing/head/helmet/toggleable/riot/ussp_riot
 	mask = /obj/item/clothing/mask/balaclava/breath
-	ears = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/security/night
 	belt = /obj/item/storage/belt/security/full
 	l_hand = /obj/item/melee/baton
@@ -312,7 +324,9 @@
 	belt = /obj/item/storage/belt/military/army/ussp/full_machinegun_pmk
 	head = /obj/item/clothing/head/helmet/toggleable/riot/ussp_heavy
 	mask = /obj/item/clothing/mask/balaclava/breath
-	ears = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/security/night
 
 /datum/id_trim/ussp/soldier/heavy_trooper
@@ -333,7 +347,9 @@
 		/obj/item/ammo_box/n762,
 	)
 	head = /obj/item/clothing/head/hats/ussp_officer
-	ears = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT END
 	belt = /obj/item/storage/belt/military/army/ussp/full_sks_honor_guard
 	r_pocket = /obj/item/tank/internals/emergency_oxygen/double
 	l_pocket = /obj/item/knife/combat
@@ -353,7 +369,9 @@
 	)
 	belt = /obj/item/storage/belt/military/army/ussp/full
 	mask = /obj/item/clothing/mask/balaclava/breath
-	ears = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/jackboots
 	gloves = /obj/item/clothing/gloves/combat
 
@@ -391,7 +409,9 @@
 	gloves = /obj/item/clothing/gloves/combat
 	mask = /obj/item/clothing/mask/balaclava/breath
 	glasses = /obj/item/clothing/glasses/meson/night
-	ears = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT END
 	belt = /obj/item/storage/belt/military/army/ussp/full_smg_spetsnaz
 	r_pocket = /obj/item/tank/internals/emergency_oxygen/double
 	l_pocket = /obj/item/knife/combat
@@ -431,7 +451,9 @@
 	shoes = /obj/item/clothing/shoes/jackboots
 	glasses = /obj/item/clothing/glasses/meson/night
 	mask = /obj/item/clothing/mask/balaclava/breath
-	ears = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT END
 	neck = /obj/item/binoculars
 	belt = /obj/item/storage/belt/military/army/ussp/full_infiltrator
 	r_pocket = /obj/item/tank/internals/emergency_oxygen/double
@@ -464,7 +486,9 @@
 	)
 	head = /obj/item/clothing/head/hats/ussp_officer
 	gloves = /obj/item/clothing/gloves/combat
-	ears = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/jackboots
 	glasses = /obj/item/clothing/glasses/eyepatch
 	l_pocket = /obj/item/stack/spacecash/c1000
@@ -493,7 +517,9 @@
 	)
 	gloves = /obj/item/clothing/gloves/color/white
 	head = /obj/item/clothing/head/hats/ussp_officer
-	ears = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/ussp
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/jackboots
 	l_hand = /obj/item/storage/briefcase
 	l_pocket = /obj/item/stack/spacecash/c1000

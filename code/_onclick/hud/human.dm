@@ -13,6 +13,7 @@
 	add_screen_object(/atom/movable/screen/mov_intent, HUD_MOB_MOVE_INTENT, HUD_GROUP_STATIC, ui_style)
 	add_screen_object(/atom/movable/screen/drop, HUD_MOB_DROP, HUD_GROUP_STATIC, ui_style, ui_swaphand_position(mymob, 1))
 	add_screen_object(/atom/movable/screen/human/toggle, HUD_HUMAN_TOGGLE_INVENTORY, HUD_GROUP_STATIC, ui_style)
+	add_screen_object(/atom/movable/screen/human/underclothing_toggle, "human_underclothing_toggle", HUD_GROUP_TOGGLEABLE_INVENTORY, ui_style) // BANDASTATION ADDITION - Foldable underclothing panel.
 	add_screen_object(/atom/movable/screen/rest, HUD_MOB_REST, HUD_GROUP_HOTKEYS, ui_style)
 	add_screen_object(/atom/movable/screen/sleep, HUD_MOB_SLEEP, HUD_GROUP_HOTKEYS, ui_style, ui_above_throw)
 	add_screen_object(/atom/movable/screen/pull, HUD_MOB_PULL, HUD_GROUP_STATIC, ui_style, ui_above_movement_top)
@@ -36,6 +37,7 @@
 	if(!is_species(mymob, /datum/species/ipc))
 		add_screen_object(/atom/movable/screen/hunger, HUD_MOB_HUNGER, HUD_GROUP_INFO)
 	// BANDASTATION EDIT END
+	update_underclothing_panel() // BANDASTATION ADDITION - Position the separate underclothing toggle.
 
 /datum/hud/human/update_locked_slots()
 	if(!mymob)
@@ -170,13 +172,25 @@ GAME_VERB_DESC(/mob/living/carbon/human, toggle_hotkey_verbs, "Toggle hotkey but
 	slot_id = ITEM_SLOT_EYES
 	screen_group = HUD_GROUP_TOGGLEABLE_INVENTORY
 
-/datum/inventory_slot/human/ears
-	name = "ears"
+// AI EDIT START - Separate ear slots
+// BANDASTATION EDIT START - Separate ear slots
+/datum/inventory_slot/human/ear_right
+	name = "ear_right"
 	icon_state = "ears"
 	icon_full = "template"
-	screen_loc = ui_ears
-	slot_id = ITEM_SLOT_EARS
+	screen_loc = ui_ear_right
+	slot_id = ITEM_SLOT_EAR_RIGHT
 	screen_group = HUD_GROUP_TOGGLEABLE_INVENTORY
+
+/datum/inventory_slot/human/ear_left
+	name = "ear_left"
+	icon_state = "ears"
+	icon_full = "template"
+	screen_loc = ui_ear_left
+	slot_id = ITEM_SLOT_EAR_LEFT
+	screen_group = HUD_GROUP_TOGGLEABLE_INVENTORY
+// BANDASTATION EDIT END
+// AI EDIT END
 
 /datum/inventory_slot/human/head
 	name = "head"

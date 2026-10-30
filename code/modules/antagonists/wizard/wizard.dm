@@ -358,8 +358,14 @@ GLOBAL_LIST_EMPTY(wizard_spellbook_purchases_by_key)
 	var/mob/living/carbon/human/H = owner.current
 	if(!istype(master_mob) || !istype(H))
 		return
-	if(master_mob.ears)
-		H.equip_to_slot_or_del(new master_mob.ears.type, ITEM_SLOT_EARS)
+	// AI EDIT START - Dual ear slots
+	// BANDASTATION EDIT START - Dual ear slots
+	if(master_mob.ear_right)
+		H.equip_to_slot_or_del(new master_mob.ear_right.type, ITEM_SLOT_EAR_RIGHT)
+	if(master_mob.ear_left)
+		H.equip_to_slot_or_del(new master_mob.ear_left.type, ITEM_SLOT_EAR_LEFT)
+	// BANDASTATION EDIT END
+	// AI EDIT END
 	if(master_mob.w_uniform)
 		H.equip_to_slot_or_del(new master_mob.w_uniform.type, ITEM_SLOT_ICLOTHING)
 	if(master_mob.shoes)

@@ -341,7 +341,9 @@
 			add_overlay("ov-opencover -c")
 
 	if(hat)
-		hat_overlay = hat.build_worn_icon(default_layer = 20, default_icon_file = 'icons/mob/clothing/head/default.dmi')
+		// AI EDIT START - Render cyborg hats using their head-slot state
+		hat_overlay = hat.build_worn_icon(default_layer = 20, default_icon_file = 'icons/mob/clothing/head/default.dmi', slot_id = ITEM_SLOT_HEAD) // BANDASTATION EDIT - Slot-specific worn states
+		// AI EDIT END
 		update_worn_icons()
 	else if(hat_overlay)
 		QDEL_NULL(hat_overlay)

@@ -229,8 +229,8 @@
 		span_notice("[surgeon] успешно извлекает [organ.name] из [FORMAT_LIMB_OWNER_RU(limb, GENITIVE)]!"),
 		span_notice("[surgeon] успешно извлекает что-то из [FORMAT_LIMB_OWNER_RU(limb, GENITIVE)]!"),
 	)
-	display_pain(limb.owner, "Ваша [limb.ru_plaintext_zone[PREPOSITIONAL]] пульсирует от боли, вы больше не чувствуете свой [declent_ru(organ.name, ACCUSATIVE)]!")
-	log_combat(surgeon, limb.owner, "surgically removed [declent_ru(organ.name, ACCUSATIVE)] from")
+	display_pain(limb.owner, "Ваша [limb.ru_plaintext_zone[PREPOSITIONAL]] пульсирует от боли, вы больше не чувствуете свой [organ.declent_ru(ACCUSATIVE)]!")
+	log_combat(surgeon, limb.owner, "surgically removed [organ.declent_ru(ACCUSATIVE)] from")
 	if (limb.owner)
 		organ.Remove(limb.owner)
 	else

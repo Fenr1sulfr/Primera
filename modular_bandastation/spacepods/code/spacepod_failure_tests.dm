@@ -1,3 +1,22 @@
+// AI EDIT START - Isolate the meltdown test from unrelated world explosions
+/// Count real blasts at the test pod's origin independently of explosions elsewhere.
+/datum/unit_test/spacepod_failure_meltdown
+	/// The test pod's epicenter, retained until signal cleanup.
+	var/turf/explosion_origin
+	/// Number of blasts observed at this test's epicenter.
+	var/explosions_at_origin = 0
+
+/datum/unit_test/spacepod_failure_meltdown/Destroy()
+	UnregisterSignal(SSdcs, COMSIG_GLOB_EXPLOSION)
+	explosion_origin = null
+	return ..()
+
+/datum/unit_test/spacepod_failure_meltdown/proc/on_explosion(datum/source, turf/epicenter)
+	SIGNAL_HANDLER
+	if(epicenter == explosion_origin)
+		explosions_at_origin++
+// AI EDIT END
+
 /// Exercise the real lethal-damage callback and its three-second timer, including the blast.
 /datum/unit_test/spacepod_failure_meltdown/Run()
 	var/turf/origin = locate(run_loc_floor_bottom_left.x + 2, run_loc_floor_bottom_left.y + 2, run_loc_floor_bottom_left.z)
@@ -22,7 +41,10 @@
 	TEST_ASSERT(length(old_actions), "The boarded pilot did not receive any pod action datums.")
 	var/obj/item/spacepod_equipment/misc/tracker/tracker = pod.misc_system
 	var/list/turf/wreckage_turfs = pod.locs.Copy()
-	var/explosions_before = SSexplosions.explosion_index
+	// AI EDIT START - Observe only the test pod's explosion epicenter
+	explosion_origin = origin
+	RegisterSignal(SSdcs, COMSIG_GLOB_EXPLOSION, PROC_REF(on_explosion))
+	// AI EDIT END
 	pod.take_damage(pod.max_integrity + 1, BRUTE, MELEE, sound_effect = FALSE)
 	TEST_ASSERT(pod.melting_down, "A lethal native hit did not enter core meltdown.")
 	TEST_ASSERT(!QDELETED(pod), "Lethal damage skipped the donor's delayed core failure.")
@@ -38,7 +60,9 @@
 	while(SSexplosions.is_exploding() && world.time < deadline)
 		stoplag(1)
 	TEST_ASSERT(!SSexplosions.is_exploding(), "The pod blast did not finish processing within the bounded test interval.")
-	TEST_ASSERT_EQUAL(SSexplosions.explosion_index, explosions_before + 1, "One lethal core failure did not produce exactly one explosion.")
+	// AI EDIT START - Preserve the strict single-blast assertion without a global counter
+	TEST_ASSERT_EQUAL(explosions_at_origin, 1, "One lethal core failure did not produce exactly one explosion.")
+	// AI EDIT END
 	for(var/turf/tile as anything in wreckage_turfs)
 		var/obj/effect/decal/remains/robot/spacepod/debris
 		while(!debris && world.time < deadline)

@@ -60,7 +60,7 @@
 	SIGNAL_HANDLER
 	if(user.combat_mode || !isvox(target) || !is_type_in_typecache(item, GLOB.vox_edible_items))
 		return NONE
-	var/datum/component/vox_food/food = item.AddComponent(/datum/component/vox_food)
+	var/datum/component/vox_food/food = item.LoadComponent(/datum/component/vox_food)
 	return food.try_feed(target, user)
 
 /datum/species/vox/pre_equip_species_outfit(datum/job/job, mob/living/carbon/human/equipping, visuals_only = FALSE)

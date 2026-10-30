@@ -32,8 +32,16 @@
 #define ITEM_SLOT_GLOVES (1<<2)
 /// Glasses slot
 #define ITEM_SLOT_EYES (1<<3)
-/// Ear slot (radios, earmuffs)
-#define ITEM_SLOT_EARS (1<<4)
+// AI EDIT START - Separate ear slots
+// BANDASTATION EDIT START - Separate ear slots
+/// Right ear slot (radios, earmuffs); retains the original ear slot bit.
+#define ITEM_SLOT_EAR_RIGHT (1<<4)
+/// Left ear slot.
+#define ITEM_SLOT_EAR_LEFT (1<<21)
+/// Items wearable on either ear.
+#define ITEM_SLOT_EARS (ITEM_SLOT_EAR_RIGHT|ITEM_SLOT_EAR_LEFT)
+// BANDASTATION EDIT END
+// AI EDIT END
 /// Mask slot
 #define ITEM_SLOT_MASK (1<<5)
 /// Head slot (helmets, hats, etc.)
@@ -61,8 +69,17 @@
 /// Legcuff slot (bolas, beartraps)
 #define ITEM_SLOT_LEGCUFFED (1<<17)
 
+// BANDASTATION ADDITION START - Removable underclothing
+#define ITEM_SLOT_UNDERWEAR (1<<18)
+#define ITEM_SLOT_UNDERSHIRT (1<<19)
+#define ITEM_SLOT_SOCKS (1<<20)
+#define ITEM_SLOT_UNDERCLOTHING (ITEM_SLOT_UNDERWEAR|ITEM_SLOT_UNDERSHIRT|ITEM_SLOT_SOCKS)
+// BANDASTATION ADDITION END
+
 /// Total amount of slots
-#define SLOTS_AMT 19 // Keep this up to date!
+// AI EDIT START - Removable underclothing and separate ear slots
+#define SLOTS_AMT 23 // Keep this up to date! // BANDASTATION EDIT - Removable underclothing and separate ear slots
+// AI EDIT END
 
 ///Inventory slots that can be blacklisted by a species from being equipped into
 DEFINE_BITFIELD(no_equip_flags, list(
@@ -76,13 +93,18 @@ DEFINE_BITFIELD(no_equip_flags, list(
 	"SHOES" = ITEM_SLOT_FEET,
 	"BACKPACKS" = ITEM_SLOT_BACK,
 	"TIES" = ITEM_SLOT_NECK,
+	// BANDASTATION ADDITION START - Removable underclothing
+	"UNDERWEAR" = ITEM_SLOT_UNDERWEAR,
+	"UNDERSHIRT" = ITEM_SLOT_UNDERSHIRT,
+	"SOCKS" = ITEM_SLOT_SOCKS,
+	// BANDASTATION ADDITION END
 ))
 
 //SLOT GROUP HELPERS
 #define ITEM_SLOT_POCKETS (ITEM_SLOT_LPOCKET|ITEM_SLOT_RPOCKET)
 /// Slots that are physically on you
 #define ITEM_SLOT_ON_BODY (ITEM_SLOT_ICLOTHING | ITEM_SLOT_OCLOTHING | ITEM_SLOT_GLOVES | ITEM_SLOT_EYES | ITEM_SLOT_EARS | \
-	ITEM_SLOT_MASK | ITEM_SLOT_HEAD | ITEM_SLOT_FEET | ITEM_SLOT_ID | ITEM_SLOT_BELT | ITEM_SLOT_BACK | ITEM_SLOT_NECK )
+	ITEM_SLOT_MASK | ITEM_SLOT_HEAD | ITEM_SLOT_FEET | ITEM_SLOT_ID | ITEM_SLOT_BELT | ITEM_SLOT_BACK | ITEM_SLOT_NECK | ITEM_SLOT_UNDERCLOTHING ) // BANDASTATION EDIT - Removable underclothing
 /// Slots that are used for storage
 #define ITEM_SLOT_STORAGE (ITEM_SLOT_POCKETS | ITEM_SLOT_BELT | ITEM_SLOT_BACK | ITEM_SLOT_SUITSTORE)
 

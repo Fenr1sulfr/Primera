@@ -25,7 +25,7 @@
 
 	// Инструменты
 	var/tool_mod = 0
-	if(isitem(tool) || tool_check(tool))
+	if(isitem(tool))
 		var/obj/item/realtool = tool
 		var/tool_type = realtool.type
 		if(implements[tool] > 1.15) // чек на гетто инструмент

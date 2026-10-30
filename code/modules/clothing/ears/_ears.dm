@@ -28,6 +28,10 @@
 	. = ..()
 	AddElement(/datum/element/earhealing)
 	AddComponent(/datum/component/wearertargeting/earprotection)
+	// AI EDIT START - Reserve both ear slots for protected earpieces
+	// BANDASTATION ADDITION - Protected earpieces occupy both ears
+	AddComponent(/datum/component/occupies_slots, ITEM_SLOT_EARS)
+	// AI EDIT END
 	AddElement(/datum/element/adjust_fishing_difficulty, -2)
 
 /obj/item/clothing/ears/earmuffs/debug

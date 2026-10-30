@@ -126,6 +126,14 @@
 
 // /obj/item signals
 
+// AI EDIT START - Candidate-side equip validation
+// BANDASTATION ADDITION START - Candidate-side equip validation
+/// On the candidate from human/can_equip, before and after species checks: (mob/living/carbon/human/target, slot).
+/// Return COMPONENT_BLOCK_EQUIP to reject the equip.
+#define COMSIG_ITEM_EQUIP_CHECK "item_equip_check"
+// BANDASTATION ADDITION END
+// AI EDIT END
+
 ///from base of obj/item/equipped(): (mob/equipper, slot)
 #define COMSIG_ITEM_EQUIPPED "item_equip"
 ///From base of obj/item/on_equipped() (mob/equipped, slot)

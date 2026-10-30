@@ -1,3 +1,24 @@
+/// Intercept only the external TTS dispatch, leaving native speech and its hearers unchanged.
+/mob/living/carbon/human/consistent/spacepod_speech_counter
+	var/tts_calls = 0
+	var/last_tts_message
+	var/last_tts_language
+	var/tts_hearers_count = 0
+
+/mob/living/carbon/human/consistent/spacepod_speech_counter/do_tts_message(message, language, message_mods, list/tts_filter, list/hearers)
+	tts_calls++
+	last_tts_message = message
+	last_tts_language = language
+	tts_hearers_count = length(hearers)
+
+/// Mock only the headless display boundary; native Hear still translates and checks speech range.
+/mob/living/carbon/human/consistent/spacepod_speech_listener
+	var/last_displayed_message
+
+/mob/living/carbon/human/consistent/spacepod_speech_listener/show_message(msg, type, alt_msg, alt_type, avoid_highlighting = FALSE)
+	last_displayed_message = msg
+	return TRUE
+
 /// Both cabin occupants keep speaking without creating either native kind of overhead speech bubble.
 /datum/unit_test/spacepod_speech_bubbles
 	var/last_heard_message
@@ -9,20 +30,25 @@
 /datum/unit_test/spacepod_speech_bubbles/Run()
 	var/turf/origin = locate(run_loc_floor_bottom_left.x + 2, run_loc_floor_bottom_left.y + 2, run_loc_floor_bottom_left.z)
 	var/obj/vehicle/sealed/spacepod/sec/pod = allocate(__IMPLIED_TYPE__, origin)
-	var/mob/living/carbon/human/consistent/pilot = allocate(__IMPLIED_TYPE__, get_step(origin, SOUTH))
-	var/mob/living/carbon/human/consistent/passenger = allocate(__IMPLIED_TYPE__, get_step(origin, SOUTH))
-	var/mob/living/carbon/human/consistent/listener = allocate(__IMPLIED_TYPE__, get_step(origin, SOUTH))
+	var/mob/living/carbon/human/consistent/spacepod_speech_counter/pilot = allocate(__IMPLIED_TYPE__, get_step(origin, SOUTH))
+	var/mob/living/carbon/human/consistent/spacepod_speech_counter/passenger = allocate(__IMPLIED_TYPE__, get_step(origin, SOUTH))
+	var/mob/living/carbon/human/consistent/spacepod_speech_listener/listener = allocate(__IMPLIED_TYPE__, get_step(origin, SOUTH))
 	listener.mock_client = allocate(/datum/client_interface)
 	RegisterSignal(listener, COMSIG_MOVABLE_HEAR, PROC_REF(on_hearing))
 	TEST_ASSERT(pod.mob_enter(pilot, silent = TRUE), "The speech fixture's pilot could not board.")
 	TEST_ASSERT(pod.mob_enter(passenger, silent = TRUE), "The speech fixture's passenger could not board.")
 	var/obj/item/radio/anchor = allocate(__IMPLIED_TYPE__, listener.loc)
-	for(var/mob/living/occupant as anything in list(pilot, passenger))
+	for(var/mob/living/carbon/human/consistent/spacepod_speech_counter/occupant as anything in list(pilot, passenger))
 		TEST_ASSERT(HAS_TRAIT_FROM(occupant, TRAIT_RUNECHAT_HIDDEN, REF(pod)), "Boarding did not suppress the occupant's native runechat.")
 		var/bubbles_before = length(occupant.update_on_z)
 		last_heard_message = null
 		occupant.say("Cabin speech remains audible")
 		TEST_ASSERT_EQUAL(last_heard_message, "Cabin speech remains audible", "Suppressing cabin bubbles also blocked ordinary speech delivery.")
+		TEST_ASSERT(findtext(listener.last_displayed_message, "Cabin speech remains audible"), "Native Hear did not deliver the intact cabin text to the display boundary.")
+		TEST_ASSERT_EQUAL(occupant.tts_calls, 1, "A cabin utterance did not dispatch TTS exactly once.")
+		TEST_ASSERT_EQUAL(occupant.last_tts_message, "Cabin speech remains audible", "The cabin fast path changed the TTS text.")
+		TEST_ASSERT_EQUAL(occupant.last_tts_language, /datum/language/common, "The cabin fast path changed the TTS language.")
+		TEST_ASSERT(occupant.tts_hearers_count > 0, "Cabin TTS lost the native speech hearers.")
 		TEST_ASSERT_EQUAL(length(occupant.update_on_z), bubbles_before, "A real cabin utterance created the native speech-bubble sprite.")
 
 		// These are the native creation entry points. Headless listeners have no real client, so
@@ -40,11 +66,23 @@
 	for(var/turf/footprint as anything in block(destination, locate(destination.x + 1, destination.y + 1, destination.z)))
 		TEST_ASSERT(isopenturf(footprint) && !footprint.is_blocked_turf(ignore_atoms = list(pod)), "The speech fixture's movement destination is blocked at [COORD(footprint)].")
 	TEST_ASSERT(pod.relaymove(pilot, NORTH), "The speech fixture could not perform a real piloted movement step.")
-	for(var/mob/living/occupant as anything in list(pilot, passenger))
+	for(var/mob/living/carbon/human/consistent/spacepod_speech_counter/occupant as anything in list(pilot, passenger))
 		var/bubbles_before = length(occupant.update_on_z)
+		last_heard_message = null
 		occupant.say("Moving cabin speech stays hidden")
+		TEST_ASSERT_EQUAL(last_heard_message, "Moving cabin speech stays hidden", "Movement changed the cabin's native speech delivery.")
+		TEST_ASSERT_EQUAL(occupant.tts_calls, 2, "Movement changed the cabin's one-TTS-dispatch-per-utterance behavior.")
 		TEST_ASSERT_EQUAL(length(occupant.update_on_z), bubbles_before, "Movement restored the cabin's speech-bubble sprite.")
 		TEST_ASSERT(HAS_TRAIT_FROM(occupant, TRAIT_RUNECHAT_HIDDEN, REF(pod)), "Movement dropped the occupant's runechat suppression.")
+		TEST_ASSERT(pod.mob_exit(occupant, silent = TRUE), "The TTS control speaker could not leave the cabin.")
+		bubbles_before = length(occupant.update_on_z)
+		last_heard_message = null
+		occupant.say("Outside speech remains audible")
+		TEST_ASSERT_EQUAL(last_heard_message, "Outside speech remains audible", "The optimized cabin path changed outside speech delivery.")
+		TEST_ASSERT(findtext(listener.last_displayed_message, "Outside speech remains audible"), "Native Hear did not deliver the intact outside text to the display boundary.")
+		TEST_ASSERT_EQUAL(occupant.tts_calls, 3, "An outside utterance did not dispatch TTS exactly once.")
+		TEST_ASSERT_EQUAL(occupant.last_tts_message, "Outside speech remains audible", "The outside control changed the TTS text.")
+		TEST_ASSERT_EQUAL(length(occupant.update_on_z), bubbles_before + 1, "The outside control lost its native speech-bubble sprite.")
 	UnregisterSignal(listener, COMSIG_MOVABLE_HEAR)
 
 /// Normal exit, forced relocation and pod deletion release only the pod's own suppression source.

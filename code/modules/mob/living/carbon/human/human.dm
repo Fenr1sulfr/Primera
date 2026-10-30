@@ -64,6 +64,11 @@
 	randomize_human_normie(src, randomize_mutations = TRUE, update_body = FALSE)
 
 /mob/living/carbon/human/Destroy()
+	// BANDASTATION ADDITION START - Contents are deleted by the parent.
+	w_underwear = null
+	w_undershirt = null
+	w_socks = null
+	// BANDASTATION ADDITION END
 	GLOB.human_list -= src
 
 	if (mob_mood)

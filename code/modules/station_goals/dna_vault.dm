@@ -123,6 +123,8 @@
 
 //Generate a unique set of mutation for each person
 /obj/machinery/dna_vault/proc/roll_powers(mob/user)
+	if(!ishuman(user) || !user.can_mutate())
+		return
 	var/datum/weakref/user_weakref = WEAKREF(user)
 	if((user_weakref in power_lottery) || isdead(user))
 		return
@@ -153,7 +155,7 @@
 	data["used"] = TRUE
 	data["choiceA"] = ""
 	data["choiceB"] = ""
-	if(user && completed)
+	if(completed && ishuman(user) && user.can_mutate() && !isdead(user))
 		var/list/mutation_options = power_lottery[WEAKREF(user)]
 		if(length(mutation_options))
 			var/datum/mutation/mutation1 = mutation_options[1]
@@ -179,6 +181,8 @@
 		SSshuttle.shuttle_purchase_requirements_met[SHUTTLE_UNLOCK_ARK] = TRUE
 
 /obj/machinery/dna_vault/proc/upgrade(mob/living/carbon/human/target, upgrade_type)
+	if(!completed || !istype(target) || !target.can_mutate() || isdead(target))
+		return
 	var/datum/weakref/human_weakref = WEAKREF(target)
 	var/static/list/associated_mutation = list(
 		"Breathless" = /datum/mutation/breathless,

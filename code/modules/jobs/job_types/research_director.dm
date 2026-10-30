@@ -66,7 +66,9 @@
 		)
 	belt = /obj/item/modular_computer/pda/crew/heads/rd
 	head = /obj/item/clothing/head/beret/science/rd
-	ears = /obj/item/radio/headset/heads/rd
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/heads/rd // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/jackboots
 	gloves = /obj/item/clothing/gloves/color/black
 	l_pocket = /obj/item/laser_pointer/purple

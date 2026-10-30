@@ -50,7 +50,9 @@
 	uniform = /obj/item/clothing/under/rank/cargo/qm
 	belt = /obj/item/modular_computer/pda/crew/heads/quartermaster
 	suit = /obj/item/clothing/suit/jacket/quartermaster
-	ears = /obj/item/radio/headset/heads/qm
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/heads/qm // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/sunglasses
 	shoes = /obj/item/clothing/shoes/laceup
 	l_hand = /obj/item/clipboard

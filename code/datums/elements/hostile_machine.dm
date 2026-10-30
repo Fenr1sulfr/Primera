@@ -26,10 +26,14 @@
 /datum/element/hostile_machine/proc/on_z_change(atom/movable/source, turf/old_turf, turf/new_turf, same_z_layer)
 	SIGNAL_HANDLER
 
-	if(same_z_layer)
+	// BANDASTATION EDIT START - AI candidates are indexed by actual z, not rendering plane offset.
+	if(old_turf?.z == new_turf?.z)
 		return
-	remove_from_z(source, old_turf.z)
-	add_to_z(source, new_turf.z)
+	if(old_turf)
+		remove_from_z(source, old_turf.z)
+	if(new_turf)
+		add_to_z(source, new_turf.z)
+	// BANDASTATION EDIT END
 
 /datum/element/hostile_machine/proc/add_to_z(atom/target, z)
 	if(isnull(z))

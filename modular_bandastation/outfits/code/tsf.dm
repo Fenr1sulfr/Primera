@@ -52,7 +52,9 @@
 	accessory = /obj/item/clothing/accessory/holster/tacticool/tsf_commander
 	gloves = /obj/item/clothing/gloves/combat
 	head = /obj/item/clothing/head/beret/tsf_commander
-	ears = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/jackboots
 	glasses = /obj/item/clothing/glasses/thermal/eyepatch/tsf_commander
 	r_pocket = /obj/item/lighter/skull
@@ -78,7 +80,9 @@
 		/obj/item/lighter/greyscale,
 	)
 	head = /obj/item/clothing/head/beret/tsf_marine
-	ears = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/jackboots
 	glasses = /obj/item/clothing/glasses/sunglasses
 
@@ -104,7 +108,9 @@
 		/obj/item/lighter/greyscale,
 	)
 	head = /obj/item/clothing/head/beret/tsf_marine_officer
-	ears = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/jackboots
 	belt = /obj/item/storage/belt/military/army/tsf/full_pistol
 	glasses = /obj/item/clothing/glasses/hud/security/sunglasses/tsf
@@ -132,7 +138,9 @@
 	)
 	shoes = /obj/item/clothing/shoes/jackboots
 	gloves = /obj/item/clothing/gloves/combat
-	ears = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/security/sunglasses/tsf
 	mask = /obj/item/clothing/mask/gas/sechailer
 	head = /obj/item/clothing/head/helmet/marine/security
@@ -282,7 +290,9 @@
 		/obj/item/grenade/smokebomb = 2,
 	)
 	belt = /obj/item/storage/belt/military/army/tsf/full_machinegun
-	ears = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/security/sunglasses/tsf
 	head = /obj/item/clothing/head/helmet/marine/security/tsf_heavy
 
@@ -300,7 +310,9 @@
 		/obj/item/storage/box/survival/tsf/officer,
 	)
 	head = /obj/item/clothing/head/beret/tsf_marsoc
-	ears = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/jackboots
 	glasses = /obj/item/clothing/glasses/hud/security/sunglasses/tsf
 	belt = /obj/item/storage/belt/military/army/tsf/full_pistol
@@ -343,7 +355,9 @@
 	gloves = /obj/item/clothing/gloves/combat
 	mask = /obj/item/clothing/mask/gas/sechailer
 	glasses = /obj/item/clothing/glasses/hud/security/night
-	ears = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT END
 	belt = /obj/item/storage/belt/military/army/tsf/full_autorifle_carwo_marsok
 	l_pocket = /obj/item/knife/combat
 
@@ -365,7 +379,9 @@
 	gloves = /obj/item/clothing/gloves/combat
 	mask = /obj/item/clothing/mask/gas/sechailer
 	glasses = /obj/item/clothing/glasses/hud/security/night
-	ears = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT END
 	belt = /obj/item/storage/belt/military/army/tsf/full_engineer
 
 /datum/id_trim/tsf/marsoc/breacher
@@ -387,7 +403,9 @@
 	gloves = /obj/item/clothing/gloves/combat
 	mask = /obj/item/clothing/mask/gas/sechailer
 	glasses = /obj/item/clothing/glasses/hud/security/night
-	ears = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT END
 	belt = /obj/item/storage/belt/military/army/tsf/full_autorifle_carwo_marsok
 	neck = /obj/item/binoculars
 
@@ -423,7 +441,9 @@
 	shoes = /obj/item/clothing/shoes/jackboots
 	glasses = /obj/item/clothing/glasses/meson/night
 	mask = /obj/item/clothing/mask/breath/breathscarf/tsf_infiltrator
-	ears = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT END
 	neck = /obj/item/binoculars
 	belt = /obj/item/storage/belt/military/army/tsf/full_infiltrator
 	l_pocket = /obj/item/tank/internals/emergency_oxygen/double
@@ -455,7 +475,9 @@
 		/obj/item/pen/fourcolor,
 	)
 	head = /obj/item/clothing/head/hats/fedora/tsf
-	ears = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/laceup
 	glasses = /obj/item/clothing/glasses/sunglasses
 	l_pocket = /obj/item/stack/spacecash/c1000
@@ -485,7 +507,9 @@
 	)
 	gloves = /obj/item/clothing/gloves/color/white
 	head = /obj/item/clothing/head/beret/tsf_diplomat
-	ears = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/captain/alt/tsf
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/laceup
 	l_hand = /obj/item/storage/briefcase
 	neck = /obj/item/clothing/neck/tsf_fancy_cloak

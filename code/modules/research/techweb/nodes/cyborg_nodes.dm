@@ -9,6 +9,7 @@
 		/datum/design/ipc_chassis,
 		/datum/design/ipc_microbattery,
 		/datum/design/ipc_power_cord,
+		/datum/design/ipc_voicebox,
 		/datum/design/ipc_nanopaste,
 		// BANDASTATION ADDITION END - IPC components and maintenance
 		/datum/design/borg_chest,

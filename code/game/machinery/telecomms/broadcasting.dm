@@ -179,13 +179,19 @@
 	if(should_do_radio_tts)
 		receive = list()
 		receive_radios = list()
+		// AI EDIT START - One playback per listener with two headsets
+		var/list/tts_listeners = list() // BANDASTATION ADDITION - One playback per listener with two headsets
+		// AI EDIT END
 		for(var/radio, radio_hearers in get_hearers_in_radio_ranges_track_radios(radios))
 			receive |= radio_hearers
 			// BANDASTATION EDIT START: Spatial TTS
 			var/datum/weakref/radio_ref = WEAKREF(radio)
 			for(var/mob/possible_hearer in radio_hearers)
-				if(can_hear_radio_tts(possible_hearer, frequency))
+				// AI EDIT START - Play radio TTS once per listener wearing two headsets
+				if(!tts_listeners[possible_hearer] && can_hear_radio_tts(possible_hearer, frequency)) // BANDASTATION EDIT - Dual ear slots
+					tts_listeners[possible_hearer] = TRUE // BANDASTATION ADDITION - Dual ear slots
 					LAZYADD(receive_radios[radio_ref], WEAKREF(possible_hearer))
+				// AI EDIT END
 			// BANDASTATION EDIT START: Spatial TTS
 
 	else

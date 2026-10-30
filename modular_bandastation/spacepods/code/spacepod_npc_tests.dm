@@ -56,3 +56,29 @@
 	TEST_ASSERT(!monster.CanAttack(pod), "A dead enemy passenger kept the otherwise friendly pod hostile.")
 	monster.FindTarget(list(pod))
 	TEST_ASSERT_NULL(monster.target, "Revalidation retained a pod without a living hostile occupant.")
+
+/// Separate physical z-levels can share a rendering plane; the AI registry must still follow movement.
+/datum/unit_test/spacepod_npc_z_registration
+	parent_type = /datum/unit_test/spacepod_vacuum
+
+/datum/unit_test/spacepod_npc_z_registration/Run()
+	TEST_ASSERT_NOTNULL(vacuum_origin, "Could not reserve the separate z-level registration fixture.")
+	var/turf/origin = run_loc_floor_bottom_left
+	TEST_ASSERT(origin.z != vacuum_origin.z, "The registration fixture must cross physical z-levels.")
+	TEST_ASSERT_EQUAL(GET_TURF_PLANE_OFFSET(origin), GET_TURF_PLANE_OFFSET(vacuum_origin), "The registration fixture must cross z-levels with the same rendering offset.")
+	for(var/subject_type in list(/obj/vehicle/sealed/spacepod, /obj/vehicle/sealed/spacepod/civilian, /obj/vehicle/sealed/mecha/ripley, /obj/machinery/porta_turret))
+		var/atom/movable/subject = allocate(subject_type, origin)
+		TEST_ASSERT((subject in GLOB.hostile_machines_by_z[origin.z]), "[subject_type] did not register at its initial z-level.")
+		TEST_ASSERT(subject.forceMove(get_step(origin, EAST)), "[subject_type] could not move within its initial z-level.")
+		TEST_ASSERT((subject in GLOB.hostile_machines_by_z[origin.z]), "Moving within a z-level unregistered [subject_type].")
+		TEST_ASSERT(subject.forceMove(vacuum_origin), "[subject_type] could not move to the separate z-level.")
+		TEST_ASSERT(!(subject in GLOB.hostile_machines_by_z[origin.z]), "Moving [subject_type] left an AI registry reference on its old z-level.")
+		TEST_ASSERT((subject in GLOB.hostile_machines_by_z[vacuum_origin.z]), "Moving [subject_type] did not register it on its new z-level.")
+		TEST_ASSERT(subject.moveToNullspace(), "[subject_type] could not move into nullspace.")
+		TEST_ASSERT(!(subject in GLOB.hostile_machines_by_z[vacuum_origin.z]), "Moving [subject_type] into nullspace left an AI registry reference.")
+		TEST_ASSERT(subject.forceMove(origin), "[subject_type] could not return from nullspace.")
+		TEST_ASSERT((subject in GLOB.hostile_machines_by_z[origin.z]), "Returning [subject_type] from nullspace did not restore its AI registration.")
+		TEST_ASSERT(subject.forceMove(vacuum_origin), "[subject_type] could not move before deletion.")
+		qdel(subject)
+		TEST_ASSERT(!(subject in GLOB.hostile_machines_by_z[origin.z]), "Deleting [subject_type] left an AI registry reference on its previous z-level.")
+		TEST_ASSERT(!(subject in GLOB.hostile_machines_by_z[vacuum_origin.z]), "Deleting [subject_type] left an AI registry reference on its final z-level.")

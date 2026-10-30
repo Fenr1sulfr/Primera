@@ -30,8 +30,14 @@
 			mask = item_path
 		if(ITEM_SLOT_NECK)
 			neck = item_path
-		if(ITEM_SLOT_EARS)
-			ears = item_path
+		// AI EDIT START - Dual ear slots
+		// BANDASTATION EDIT START - Dual ear slots
+		if(ITEM_SLOT_EAR_RIGHT)
+			ear_right = item_path
+		if(ITEM_SLOT_EAR_LEFT)
+			ear_left = item_path
+		// BANDASTATION EDIT END
+		// AI EDIT END
 		if(ITEM_SLOT_EYES)
 			glasses = item_path
 		if(ITEM_SLOT_ID)
@@ -82,7 +88,9 @@
 
 	//Copy equipment
 	var/list/result = list()
-	var/list/slots_to_check = list(ITEM_SLOT_ICLOTHING,ITEM_SLOT_BACK,ITEM_SLOT_OCLOTHING,ITEM_SLOT_BELT,ITEM_SLOT_GLOVES,ITEM_SLOT_FEET,ITEM_SLOT_HEAD,ITEM_SLOT_MASK,ITEM_SLOT_NECK,ITEM_SLOT_EARS,ITEM_SLOT_EYES,ITEM_SLOT_ID,ITEM_SLOT_SUITSTORE,ITEM_SLOT_LPOCKET,ITEM_SLOT_RPOCKET)
+	// AI EDIT START - Support independent left and right ear slots
+	var/list/slots_to_check = list(ITEM_SLOT_ICLOTHING,ITEM_SLOT_BACK,ITEM_SLOT_OCLOTHING,ITEM_SLOT_BELT,ITEM_SLOT_GLOVES,ITEM_SLOT_FEET,ITEM_SLOT_HEAD,ITEM_SLOT_MASK,ITEM_SLOT_NECK,ITEM_SLOT_EAR_RIGHT,ITEM_SLOT_EAR_LEFT,ITEM_SLOT_EYES,ITEM_SLOT_ID,ITEM_SLOT_SUITSTORE,ITEM_SLOT_LPOCKET,ITEM_SLOT_RPOCKET) // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	for(var/slot in slots_to_check)
 		var/obj/item/item = get_item_by_slot(slot)
 		var/vedits = collect_vv(item)

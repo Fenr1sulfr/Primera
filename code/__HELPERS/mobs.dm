@@ -552,6 +552,14 @@ GLOBAL_LIST_INIT(skin_tone_names, list(
 ///Returns a list of strings for a given slot flag.
 /proc/parse_slot_flags(slot_flags)
 	var/list/slot_strings = list()
+	// BANDASTATION ADDITION START - Removable underclothing
+	if(slot_flags & ITEM_SLOT_UNDERWEAR)
+		slot_strings += "underwear"
+	if(slot_flags & ITEM_SLOT_UNDERSHIRT)
+		slot_strings += "undershirt"
+	if(slot_flags & ITEM_SLOT_SOCKS)
+		slot_strings += "socks"
+	// BANDASTATION ADDITION END
 	if(slot_flags & ITEM_SLOT_BACK)
 		slot_strings += "back"
 	if(slot_flags & ITEM_SLOT_MASK)
@@ -566,8 +574,14 @@ GLOBAL_LIST_INIT(skin_tone_names, list(
 		slot_strings += "belt"
 	if(slot_flags & ITEM_SLOT_ID)
 		slot_strings += "id"
-	if(slot_flags & ITEM_SLOT_EARS)
-		slot_strings += "ear"
+	// AI EDIT START - Separate ear slots
+	// BANDASTATION EDIT START - Separate ear slots
+	if(slot_flags & ITEM_SLOT_EAR_RIGHT)
+		slot_strings += "ear_right"
+	if(slot_flags & ITEM_SLOT_EAR_LEFT)
+		slot_strings += "ear_left"
+	// BANDASTATION EDIT END
+	// AI EDIT END
 	if(slot_flags & ITEM_SLOT_EYES)
 		slot_strings += "glasses"
 	if(slot_flags & ITEM_SLOT_GLOVES)

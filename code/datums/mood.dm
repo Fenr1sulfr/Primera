@@ -11,6 +11,8 @@
 /datum/mood
 	/// The parent (living) mob
 	var/mob/living/mob_parent
+	/// BANDASTATION ADDITION - Keep a neutral datum for callers when a species has no mood.
+	var/enabled = TRUE
 
 	/// The total combined value of all moodlets for the mob
 	var/mood
@@ -84,6 +86,34 @@
 	QDEL_LIST_ASSOC_VAL(mood_events)
 	return ..()
 
+// BANDASTATION ADDITION START - Disable IPC mood without invalidating shared mob_mood callers
+/datum/mood/proc/set_enabled(new_enabled)
+	if(enabled == new_enabled)
+		return
+	if(!new_enabled)
+		set_sanity(SANITY_NEUTRAL, override = TRUE)
+		enabled = FALSE
+		for(var/category in mood_events.Copy())
+			clear_mood_event(category)
+		update_mood()
+		mob_parent.remove_movespeed_modifier(MOVESPEED_ID_SANITY)
+		mob_parent.remove_actionspeed_modifier(ACTIONSPEED_ID_SANITY)
+		mob_parent.remove_status_effect(/datum/status_effect/hallucination/sanity)
+		STOP_PROCESSING(SSmood, src)
+		unmodify_hud()
+		return
+
+	enabled = TRUE
+	if(mob_parent.stat != DEAD)
+		START_PROCESSING(SSmood, src)
+	var/area/current_area = get_area(mob_parent)
+	if(current_area)
+		UnregisterSignal(current_area, COMSIG_AREA_BEAUTY_UPDATED)
+		check_area_mood(mob_parent, current_area)
+	if(mob_parent.hud_used)
+		modify_hud()
+// BANDASTATION ADDITION END
+
 /datum/mood/process(seconds_per_tick)
 	switch(mood_level)
 		if(MOOD_LEVEL_SAD4)
@@ -107,6 +137,8 @@
 
 /datum/mood/proc/handle_mob_death(datum/source, new_stat, old_stat)
 	SIGNAL_HANDLER
+	if(!enabled) // BANDASTATION ADDITION - Revival must not restart disabled mood processing
+		return
 
 	if (old_stat == DEAD && new_stat != DEAD)
 		START_PROCESSING(SSmood, src)
@@ -157,6 +189,8 @@
 		CRASH("A non path ([new_type]), was used to add a mood event. This shouldn't be happening.")
 	if (ispath(new_type, /datum/mood_event/conditional))
 		CRASH("A conditional mood event ([new_type]) was used in add_mood_event. Use add_conditional_mood_event instead.")
+	if(!enabled) // BANDASTATION ADDITION - Disabled mood cannot create events or their side effects
+		return
 	if (!istext(category))
 		category = REF(category)
 
@@ -215,6 +249,8 @@
 		if (ispath(base_type, /datum/mood_event))
 			CRASH("A non-conditional mood event ([base_type]) was used in add_conditional_mood_event. Use add_mood_event instead.")
 		CRASH("A non path ([base_type]), was used to add a mood event. This shouldn't be happening.")
+	if(!enabled) // BANDASTATION ADDITION - Conditional mood events must also remain disabled
+		return
 	if (!istext(category))
 		category = REF(category)
 
@@ -356,6 +392,8 @@
 /// Sets up the mood HUD object
 /datum/mood/proc/modify_hud(datum/source)
 	SIGNAL_HANDLER
+	if(!enabled) // BANDASTATION ADDITION - Cover HUD creation after IPC species setup
+		return
 
 	var/datum/hud/hud = mob_parent.hud_used
 	var/atom/movable/screen/mood/mood_screen_object = hud.add_screen_object(/atom/movable/screen/mood, HUD_MOB_MOOD, HUD_GROUP_INFO, update_screen = TRUE)
@@ -576,6 +614,8 @@
 
 /// Sets sanity to the specified amount and applies effects.
 /datum/mood/proc/set_sanity(amount, minimum = SANITY_INSANE, maximum = SANITY_GREAT, override = FALSE)
+	if(!enabled) // BANDASTATION ADDITION - Direct sanity changes cannot bypass disabled mood
+		return
 	// If we're out of the acceptable minimum-maximum range move back towards it in steps of 0.7
 	// If the new amount would move towards the acceptable range faster then use it instead
 	if(amount < minimum && sanity < minimum)

@@ -25,6 +25,13 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	lefthand_file = 'icons/mob/inhands/items_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/items_righthand.dmi'
 	worn_icon_state = "headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "headset_right",
+		ITEM_SLOT_EAR_LEFT = "headset_left",
+	)
+	// AI EDIT END
 	custom_materials = list(/datum/material/iron=SMALL_MATERIAL_AMOUNT * 0.75)
 	subspace_transmission = TRUE
 	canhear_range = 0 // can't hear headsets from very far away
@@ -124,17 +131,23 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 
 	for(var/language in language_list)
 		var/amount_understood = language_list[language]
+		// AI EDIT START - Track each headset language grant independently
 		if(amount_understood >= 100)
-			grant_to.grant_language(language, language_flags = UNDERSTOOD_LANGUAGE, source = LANGUAGE_RADIOKEY)
+			grant_to.grant_language(language, language_flags = UNDERSTOOD_LANGUAGE, source = "[LANGUAGE_RADIOKEY]_[REF(src)]") // BANDASTATION EDIT - Independent headset languages
 		else
-			grant_to.grant_partial_language(language, amount = amount_understood, source = LANGUAGE_RADIOKEY)
+			grant_to.grant_partial_language(language, amount = amount_understood, source = "[LANGUAGE_RADIOKEY]_[REF(src)]") // BANDASTATION EDIT - Independent headset languages
+		// AI EDIT END
 
-/// Clears all radio related languages from the mob.
+// AI EDIT START - Remove only languages granted by this headset
+/// Clears languages granted by this headset from the mob. // BANDASTATION EDIT - Independent headset languages
 /obj/item/radio/headset/proc/remove_headset_languages(mob/remove_from)
 	if(QDELETED(remove_from)) //This can be called as a part of destroy
 		return
-	remove_from.remove_all_languages(source = LANGUAGE_RADIOKEY)
-	remove_from.remove_all_partial_languages(source = LANGUAGE_RADIOKEY)
+	// BANDASTATION EDIT START - Independent headset languages
+	remove_from.remove_all_languages(source = "[LANGUAGE_RADIOKEY]_[REF(src)]")
+	remove_from.remove_all_partial_languages(source = "[LANGUAGE_RADIOKEY]_[REF(src)]")
+	// BANDASTATION EDIT END
+// AI EDIT END
 
 /obj/item/radio/headset/equipped(mob/user, slot, initial)
 	. = ..()
@@ -174,10 +187,18 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "A syndicate headset that can be used to hear all radio frequencies. Protects ears from flashbangs."
 	icon_state = "syndie_headset"
 	worn_icon_state = "syndie_headset"
+	// AI EDIT START - Keep protected earpieces on their original worn state
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = null
+	// AI EDIT END
 
 /obj/item/radio/headset/syndicate/alt/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/wearertargeting/earprotection)
+	// AI EDIT START - Reserve both ear slots for protected earpieces
+	// BANDASTATION ADDITION - Protected earpieces occupy both ears
+	AddComponent(/datum/component/occupies_slots, ITEM_SLOT_EARS)
+	// AI EDIT END
 
 /obj/item/radio/headset/syndicate/alt/leader
 	name = "team leader headset"
@@ -191,6 +212,13 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "This is used by your elite security force."
 	icon_state = "sec_headset"
 	worn_icon_state = "sec_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "sec_headset_right",
+		ITEM_SLOT_EAR_LEFT = "sec_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/headset_sec
 
 /obj/item/radio/headset/headset_sec/alt
@@ -198,16 +226,31 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "This is used by your elite security force. Protects ears from flashbangs."
 	icon_state = "sec_headset_alt"
 	worn_icon_state = "sec_headset_alt"
+	// AI EDIT START - Keep protected earpieces on their original worn state
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = null
+	// AI EDIT END
 
 /obj/item/radio/headset/headset_sec/alt/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/wearertargeting/earprotection)
+	// AI EDIT START - Reserve both ear slots for protected earpieces
+	// BANDASTATION ADDITION - Protected earpieces occupy both ears
+	AddComponent(/datum/component/occupies_slots, ITEM_SLOT_EARS)
+	// AI EDIT END
 
 /obj/item/radio/headset/headset_eng
 	name = "engineering radio headset"
 	desc = "When the engineers wish to chat like girls."
 	icon_state = "eng_headset"
 	worn_icon_state = "eng_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "eng_headset_right",
+		ITEM_SLOT_EAR_LEFT = "eng_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/headset_eng
 
 /obj/item/radio/headset/headset_rob
@@ -215,6 +258,13 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "Made specifically for the roboticists, who cannot decide between departments."
 	icon_state = "rob_headset"
 	worn_icon_state = "rob_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "rob_headset_right",
+		ITEM_SLOT_EAR_LEFT = "rob_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/headset_rob
 
 /obj/item/radio/headset/headset_med
@@ -222,6 +272,13 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "A headset for the trained staff of the medbay."
 	icon_state = "med_headset"
 	worn_icon_state = "med_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "med_headset_right",
+		ITEM_SLOT_EAR_LEFT = "med_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/headset_med
 
 /obj/item/radio/headset/headset_sci
@@ -229,6 +286,13 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "A sciency headset. Like usual."
 	icon_state = "sci_headset"
 	worn_icon_state = "sci_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "sci_headset_right",
+		ITEM_SLOT_EAR_LEFT = "sci_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/headset_sci
 
 /obj/item/radio/headset/headset_medsci
@@ -236,6 +300,13 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "A headset that is a result of the mating between medical and science."
 	icon_state = "medsci_headset"
 	worn_icon_state = "medsci_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "medsci_headset_right",
+		ITEM_SLOT_EAR_LEFT = "medsci_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/headset_medsci
 
 /obj/item/radio/headset/headset_srvsec
@@ -243,6 +314,13 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "In the criminal justice headset, the encryption key represents two separate but equally important groups. Sec, who investigate crime, and Service, who provide services. These are their comms."
 	icon_state = "srvsec_headset"
 	worn_icon_state = "srvsec_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "srvsec_headset_right",
+		ITEM_SLOT_EAR_LEFT = "srvsec_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/headset_srvsec
 
 /obj/item/radio/headset/headset_srvmed
@@ -250,6 +328,13 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "A headset allowing the wearer to communicate with medbay and service."
 	icon_state = "srv_headset"
 	worn_icon_state = "srv_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "srv_headset_right",
+		ITEM_SLOT_EAR_LEFT = "srv_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/headset_srvmed
 
 /obj/item/radio/headset/headset_srvent
@@ -257,6 +342,13 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "A headset allowing the wearer to communicate with service and broadcast to entertainment channel."
 	icon_state = "srvent_headset"
 	worn_icon_state = "srv_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "srv_headset_right",
+		ITEM_SLOT_EAR_LEFT = "srv_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/headset_srvent
 
 /obj/item/radio/headset/headset_com
@@ -264,12 +356,26 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "A headset with a commanding channel."
 	icon_state = "com_headset"
 	worn_icon_state = "com_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "com_headset_right",
+		ITEM_SLOT_EAR_LEFT = "com_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/headset_com
 
 /obj/item/radio/headset/heads
 	command = TRUE
 	icon_state = "com_headset"
 	worn_icon_state = "com_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "com_headset_right",
+		ITEM_SLOT_EAR_LEFT = "com_headset_left",
+	)
+	// AI EDIT END
 
 /obj/item/radio/headset/heads/captain
 	name = "\proper the captain's headset"
@@ -281,10 +387,18 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "The headset of the boss. Protects ears from flashbangs."
 	icon_state = "com_headset_alt"
 	worn_icon_state = "com_headset_alt"
+	// AI EDIT START - Keep protected earpieces on their original worn state
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = null
+	// AI EDIT END
 
 /obj/item/radio/headset/heads/captain/alt/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/wearertargeting/earprotection)
+	// AI EDIT START - Reserve both ear slots for protected earpieces
+	// BANDASTATION ADDITION - Protected earpieces occupy both ears
+	AddComponent(/datum/component/occupies_slots, ITEM_SLOT_EARS)
+	// AI EDIT END
 
 /obj/item/radio/headset/heads/rd
 	name = "\proper the research director's headset"
@@ -307,10 +421,18 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "The headset of the man in charge of keeping order and protecting the station. Protects ears from flashbangs."
 	icon_state = "com_headset_alt"
 	worn_icon_state = "com_headset_alt"
+	// AI EDIT START - Keep protected earpieces on their original worn state
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = null
+	// AI EDIT END
 
 /obj/item/radio/headset/heads/hos/alt/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/wearertargeting/earprotection)
+	// AI EDIT START - Reserve both ear slots for protected earpieces
+	// BANDASTATION ADDITION - Protected earpieces occupy both ears
+	AddComponent(/datum/component/occupies_slots, ITEM_SLOT_EARS)
+	// AI EDIT END
 
 /obj/item/radio/headset/heads/ce
 	name = "\proper the chief engineer's headset"
@@ -337,6 +459,13 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "A headset used by the QM's slaves."
 	icon_state = "cargo_headset"
 	worn_icon_state = "cargo_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "cargo_headset_right",
+		ITEM_SLOT_EAR_LEFT = "cargo_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/headset_cargo
 
 /obj/item/radio/headset/headset_cargo/mining
@@ -344,6 +473,13 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "Headset used by shaft miners. It has a mining network uplink which allows the user to quickly transmit commands to their comrades and amplifies their voice in low-pressure environments."
 	icon_state = "mine_headset"
 	worn_icon_state = "mine_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "mine_headset_right",
+		ITEM_SLOT_EAR_LEFT = "mine_headset_left",
+	)
+	// AI EDIT END
 	// "puts the antenna down" while the headset is off
 	overlay_speaker_idle = "headset_up"
 	overlay_mic_idle = "headset_up"
@@ -355,18 +491,29 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 
 /obj/item/radio/headset/headset_cargo/mining/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
+	// AI EDIT START - Keep speech boost traits independent between headsets
 	if(slot & ITEM_SLOT_EARS)
-		ADD_TRAIT(user, TRAIT_SPEECH_BOOSTER, CLOTHING_TRAIT)
+		ADD_CLOTHING_TRAIT(user, TRAIT_SPEECH_BOOSTER) // BANDASTATION EDIT - Independent headset traits
+	// AI EDIT END
 
 /obj/item/radio/headset/headset_cargo/mining/dropped(mob/living/carbon/human/user)
 	. = ..()
-	REMOVE_TRAIT(user, TRAIT_SPEECH_BOOSTER, CLOTHING_TRAIT)
+	// AI EDIT START - Independent headset traits
+	REMOVE_CLOTHING_TRAIT(user, TRAIT_SPEECH_BOOSTER) // BANDASTATION EDIT - Independent headset traits
+	// AI EDIT END
 
 /obj/item/radio/headset/headset_srv
 	name = "service radio headset"
 	desc = "Headset used by the service staff, tasked with keeping the station full, happy and clean."
 	icon_state = "srv_headset"
 	worn_icon_state = "srv_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "srv_headset_right",
+		ITEM_SLOT_EAR_LEFT = "srv_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/headset_service
 
 /obj/item/radio/headset/headset_cent
@@ -374,6 +521,13 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "A headset used by the upper echelons of Nanotrasen."
 	icon_state = "cent_headset"
 	worn_icon_state = "cent_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "cent_headset_right",
+		ITEM_SLOT_EAR_LEFT = "cent_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/headset_cent
 	keyslot2 = /obj/item/encryptionkey/headset_com
 
@@ -390,11 +544,19 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "A headset especially for emergency response personnel. Protects ears from flashbangs."
 	icon_state = "cent_headset_alt"
 	worn_icon_state = "cent_headset_alt"
+	// AI EDIT START - Keep protected earpieces on their original worn state
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = null
+	// AI EDIT END
 	keyslot2 = null
 
 /obj/item/radio/headset/headset_cent/alt/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/wearertargeting/earprotection)
+	// AI EDIT START - Reserve both ear slots for protected earpieces
+	// BANDASTATION ADDITION - Protected earpieces occupy both ears
+	AddComponent(/datum/component/occupies_slots, ITEM_SLOT_EARS)
+	// AI EDIT END
 
 /obj/item/radio/headset/headset_cent/alt/leader
 	command = TRUE
@@ -413,6 +575,13 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	desc = "A headset that is rumored to be one day implanted into a brain in a jar directly."
 	icon_state = "rob_headset"
 	worn_icon_state = "rob_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "rob_headset_right",
+		ITEM_SLOT_EAR_LEFT = "rob_headset_left",
+	)
+	// AI EDIT END
 	keyslot2 = new /obj/item/encryptionkey/ai_with_binary
 	command = TRUE
 
@@ -480,9 +649,11 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 
 	// Updates radio languages entirely for the mob wearing the headset
 	var/mob/mob_loc = loc
-	if(istype(mob_loc) && mob_loc.get_item_by_slot(slot_flags) == src)
+	// AI EDIT START - Refresh language grants for either equipped ear slot
+	if(istype(mob_loc) && (mob_loc.get_slot_by_item(src) & slot_flags)) // BANDASTATION EDIT - Dual ear slots
 		remove_headset_languages(mob_loc)
 		grant_headset_languages(mob_loc)
+	// AI EDIT END
 
 /obj/item/radio/headset/click_alt(mob/living/user)
 	if(!istype(user) || !command)

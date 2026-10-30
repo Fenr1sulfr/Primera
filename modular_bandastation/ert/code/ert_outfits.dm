@@ -81,7 +81,9 @@
 		/obj/item/storage/box/zipties = 1,
 	)
 	belt = /obj/item/storage/belt/security/full
-	ears = /obj/item/radio/headset/headset_cent/alt/leader
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/headset_cent/alt/leader
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/security/sunglasses
 	l_pocket = /obj/item/switchblade
 	additional_radio = /obj/item/encryptionkey/heads/captain

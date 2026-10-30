@@ -521,11 +521,19 @@ Return to step 11 of normal process."}
 	desc = "An advanced alien headset designed to monitor communications of human space stations. Why does it have a microphone? No one knows."
 	icon = 'icons/obj/antags/abductor.dmi'
 	icon_state = "abductor_headset"
+	// AI EDIT START - Keep protected earpieces on their original worn state
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = null
+	// AI EDIT END
 	keyslot2 = /obj/item/encryptionkey/heads/captain
 
 /obj/item/radio/headset/abductor/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/wearertargeting/earprotection)
+	// AI EDIT START - Reserve both ear slots for protected earpieces
+	// BANDASTATION ADDITION - Protected earpieces occupy both ears
+	AddComponent(/datum/component/occupies_slots, ITEM_SLOT_EARS)
+	// AI EDIT END
 	make_syndie()
 
 // Stops humans from disassembling abductor headsets.

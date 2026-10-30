@@ -35,6 +35,12 @@
 	var/icon/worn_icon
 	///Icon state for mob worn overlays, if null the normal icon_state will be used.
 	var/worn_icon_state
+	// AI EDIT START - Allow worn states to vary by equipment slot
+	// BANDASTATION ADDITION START - Slot-specific worn states
+	/// Worn icon states keyed by ITEM_SLOT_* bitflags.
+	var/alist/worn_icon_state_by_slot
+	// BANDASTATION ADDITION END
+	// AI EDIT END
 	///Icon state for the belt overlay, if null the normal icon_state will be used.
 	var/inside_belt_icon_state
 	///Forced mob worn layer instead of the standard preferred size.
@@ -240,6 +246,34 @@
 
 	/// Do we apply a click cooldown when resisting this object if it is restraining them?
 	var/resist_cooldown = CLICK_CD_BREAKOUT
+
+// AI EDIT START - Resolve worn states by equipment slot
+// BANDASTATION ADDITION START - Slot-specific worn states
+/// Returns the worn state for a slot, falling back to the item's ordinary worn or inventory state.
+/obj/item/proc/get_worn_icon_state(slot_id)
+	return worn_icon_state_by_slot?[slot_id] || worn_icon_state || icon_state
+
+/// Copies default slot states without running the source item's gameplay initialization.
+/proc/copy_initial_worn_icon_states(obj/item/item_type)
+	if(!ispath(item_type, /obj/item) || !item_type::worn_icon_state_by_slot)
+		return null
+	// Dynamic initial() returns a list initializer rather than a usable list.
+	var/source = GLOBAL_PROC_REF(copy_initial_worn_icon_states)
+	SSatoms.map_loader_begin(source)
+	var/obj/item/prototype
+	try
+		prototype = new item_type(null)
+	catch(var/exception/error)
+		SSatoms.map_loader_stop(source)
+		throw error
+	SSatoms.map_loader_stop(source)
+	var/alist/slot_states = prototype.worn_icon_state_by_slot?.Copy()
+	// Keep the appearance-only prototype out of later atom initialization passes.
+	prototype.flags_1 |= INITIALIZED_1
+	qdel(prototype)
+	return slot_states
+// BANDASTATION ADDITION END
+// AI EDIT END
 
 /obj/item/Initialize(mapload)
 	if(attack_verb_continuous)
@@ -1795,8 +1829,10 @@ GAME_VERB_SRC(/obj/item, verb_pickup, oview(1), "Pick up", null)
 			return (zone == BODY_ZONE_PRECISE_GROIN)
 		if(ITEM_SLOT_GLOVES)
 			return (zone == BODY_ZONE_R_ARM || zone == BODY_ZONE_L_ARM)
-		if(ITEM_SLOT_HEAD, ITEM_SLOT_EARS, ITEM_SLOT_NECK)
+		// AI EDIT START - Match either ear slot to the head body zone
+		if(ITEM_SLOT_HEAD, ITEM_SLOT_EARS, ITEM_SLOT_EAR_RIGHT, ITEM_SLOT_EAR_LEFT, ITEM_SLOT_NECK) // BANDASTATION EDIT - Separate ear slots
 			return (zone == BODY_ZONE_HEAD)
+		// AI EDIT END
 		if(ITEM_SLOT_MASK)
 			return (zone == BODY_ZONE_PRECISE_MOUTH)
 		if(ITEM_SLOT_EYES)

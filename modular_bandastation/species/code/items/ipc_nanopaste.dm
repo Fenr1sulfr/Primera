@@ -12,6 +12,7 @@
 	color = COLOR_CYAN
 	amount = 6
 	max_amount = 6
+	merge_type = /obj/item/stack/nanopaste
 	w_class = WEIGHT_CLASS_TINY
 	full_w_class = WEIGHT_CLASS_TINY
 	item_flags = NOBLUDGEON|SKIP_FANTASY_ON_SPAWN

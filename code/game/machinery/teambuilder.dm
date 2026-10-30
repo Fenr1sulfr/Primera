@@ -39,10 +39,12 @@
 		AM.add_filter("teambuilder", 2, list("type" = "outline", "color" = team_color, "size" = 2))
 	if(ishuman(AM) && team_radio)
 		var/mob/living/carbon/human/human = AM
-		var/obj/item/radio/Radio = human.ears
-		if(!Radio)
-			return
-		Radio.set_frequency(team_radio)
+		// AI EDIT START - Dual ear slots
+		// BANDASTATION EDIT START - Dual ear slots
+		for(var/obj/item/radio/radio in list(human.ear_right, human.ear_left))
+			radio.set_frequency(team_radio)
+		// BANDASTATION EDIT END
+		// AI EDIT END
 
 /obj/machinery/teambuilder/red
 	name = "Teambuilding Machine (Red)"

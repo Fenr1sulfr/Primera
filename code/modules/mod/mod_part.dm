@@ -43,14 +43,18 @@
 	var/species_id
 	if(istype(wearer))
 		switch(checked_slot)
-			if(ITEM_SLOT_HEAD, ITEM_SLOT_EYES, ITEM_SLOT_EARS, ITEM_SLOT_MASK)
+			// AI EDIT START - Support independent left and right ear slots
+			if(ITEM_SLOT_HEAD, ITEM_SLOT_EYES, ITEM_SLOT_EAR_RIGHT, ITEM_SLOT_EAR_LEFT, ITEM_SLOT_MASK) // BANDASTATION EDIT - Separate ear slots
+			// AI EDIT END
 				species_id = wearer.get_bodypart(BODY_ZONE_HEAD)?.limb_id
 			if(ITEM_SLOT_ICLOTHING, ITEM_SLOT_OCLOTHING, ITEM_SLOT_NECK)
 				species_id = wearer.get_bodypart(BODY_ZONE_CHEST)?.limb_id
 			else
 				species_id = wearer.dna?.species?.id
-	var/species_icon = overslotting.get_species_worn_icon(species_id)
-	var/mutable_appearance/worn_overlay = overslotting.build_worn_icon(default_layer = -draw_target.layer + 0.1, default_icon_file = get_default_icon_by_slot(checked_slot), override_file = species_icon, bodyshape = bodyshape)
+	// AI EDIT START - Render exposed MOD clothing using its actual equipment slot
+	var/species_icon = overslotting.get_species_worn_icon(species_id, overslotting.get_worn_icon_state(checked_slot))
+	var/mutable_appearance/worn_overlay = overslotting.build_worn_icon(default_layer = -draw_target.layer + 0.1, default_icon_file = get_default_icon_by_slot(checked_slot), override_file = species_icon, bodyshape = bodyshape, slot_id = checked_slot)
+	// AI EDIT END
 	// BANDASTATION EDIT END - Species clothing icons
 	for (var/mutable_appearance/overlay in worn_overlay.overlays)
 		overlay.layer = draw_target.layer + 0.1

@@ -159,7 +159,7 @@
 /mob/living/carbon/proc/on_geneless_trait_gain(datum/source)
 	SIGNAL_HANDLER
 
-	dna?.remove_all_mutations()
+	dna?.remove_all_mutations(GLOB.standard_mutation_sources + MUTATION_SOURCE_DNA_VAULT)
 
 /**
  * On gain of TRAIT_NO_SPLIT_PERSONALITY

@@ -72,8 +72,8 @@
 	var/list/organ_traits
 	/// Status Effects that are given to the holder of the organ.
 	var/list/organ_effects
-	/// String displayed when the organ has decayed.
-	var/failing_desc = "пребывает под влиянием разложения слишком долго, что уже принимает болезненный цвет. Орган уже не заработает, если его не лечить."
+	/// String displayed when the organ has failed.
+	var/failing_desc = "— орган не функционирует. Требуется медицинская помощь." // BANDASTATION EDIT - Organ failure does not establish decomposition as its cause
 	/// Assoc list of alternate zones where this can organ be slotted to organ slot for that zone
 	var/list/valid_zones = null
 	/// The cell line we can spawn on us

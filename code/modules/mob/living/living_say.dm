@@ -481,6 +481,12 @@ GLOBAL_LIST_INIT(message_modes_stat_limits, list(
 		if(listening_movable.Hear(src, message_language, message_raw, null, null, null, spans, message_mods, message_range) & HEAR_HEARD)
 			listened += listening_movable
 
+	do_tts_message(tts_message_to_use, message_language, message_mods, tts_filter, listened)
+	// BANDASTATION ADDITION START - Cabin speech keeps its delivery without preparing an unused speech bubble.
+	if(istype(loc, /obj/vehicle/sealed/spacepod))
+		return
+	// BANDASTATION ADDITION END
+
 	//speech bubble
 	var/list/speech_bubble_recipients = list()
 	var/talk_icon_state = say_test(message_raw)
@@ -488,11 +494,6 @@ GLOBAL_LIST_INIT(message_modes_stat_limits, list(
 		if(M.client)
 			if(!M.client.prefs.read_preference(/datum/preference/toggle/enable_runechat) || (SSlag_switch.measures[DISABLE_RUNECHAT] && !HAS_TRAIT(src, TRAIT_BYPASS_MEASURES)))
 				speech_bubble_recipients.Add(M.client)
-	do_tts_message(tts_message_to_use, message_language, message_mods, tts_filter, listened)
-	// BANDASTATION ADDITION START - Cabin speech keeps its delivery without a trailing speech-bubble sprite.
-	if(istype(loc, /obj/vehicle/sealed/spacepod))
-		return
-	// BANDASTATION ADDITION END
 	var/image/say_popup = image('icons/mob/effects/talk.dmi', src, "[bubble_type][talk_icon_state]", FLY_LAYER)
 	SET_PLANE_EXPLICIT(say_popup, ABOVE_GAME_PLANE, src)
 	say_popup.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA

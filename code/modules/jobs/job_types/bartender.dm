@@ -58,7 +58,9 @@
 		/obj/item/storage/box/beanbag = 1,
 		)
 	belt = /obj/item/modular_computer/pda/crew/bar
-	ears = /obj/item/radio/headset/headset_srv
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_srv // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/sunglasses/reagent
 	shoes = /obj/item/clothing/shoes/laceup
 

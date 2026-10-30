@@ -3,6 +3,7 @@
 	desc = "Попытка найти и извлечь имплант из пациента. \
 		Любой найденный имплант будет уничтожен, если рядом или в руках нет кейса для имплантов."
 	operation_flags = OPERATION_NOTABLE
+	required_bodytype = NONE // BANDASTATION ADDITION - Implant removal also supports robotic chests
 	implements = list(
 		TOOL_HEMOSTAT = 1,
 		TOOL_CROWBAR = 1.5,
@@ -30,6 +31,7 @@
 	if(LAZYLEN(patient.implants))
 		display_pain(patient, "Вы чувствуете серьезную боль, когда [surgeon] копается внутри вас!")
 
+// BANDASTATION EDIT START - Use item declension methods during implant extraction
 /datum/surgery_operation/basic/implant_removal/on_success(mob/living/patient, mob/living/surgeon, obj/item/tool, list/operation_args)
 	var/obj/item/implant/implant = LAZYACCESS(patient.implants, 1)
 	if(isnull(implant))
@@ -45,11 +47,11 @@
 	display_results(
 		surgeon,
 		patient,
-		span_notice("Вы успешно извлекаете [declent_ru(implant, ACCUSATIVE)] из [patient.declent_ru(GENITIVE)]."),
-		span_notice("[surgeon] успешно извлекает [declent_ru(implant, ACCUSATIVE)] из [patient.declent_ru(GENITIVE)]!"),
+		span_notice("Вы успешно извлекаете [implant.declent_ru(ACCUSATIVE)] из [patient.declent_ru(GENITIVE)]."),
+		span_notice("[surgeon] успешно извлекает [implant.declent_ru(ACCUSATIVE)] из [patient.declent_ru(GENITIVE)]!"),
 		span_notice("[surgeon] успешно извлекает что-то из [patient.declent_ru(GENITIVE)]!"),
 	)
-	display_pain(patient, "Вы чувствуете, как ваш [declent_ru(implant.name, ACCUSATIVE)] вытаскивают из вас!")
+	display_pain(patient, "Вы чувствуете, как ваш [implant.declent_ru(ACCUSATIVE)] вытаскивают из вас!")
 	implant.removed(patient)
 
 	if(QDELETED(implant))
@@ -65,10 +67,11 @@
 	display_results(
 		surgeon,
 		patient,
-		span_notice("Вы помещаете [declent_ru(implant, ACCUSATIVE)] в [case]."),
-		span_notice("[surgeon] помещает [declent_ru(implant, ACCUSATIVE)] в [case]."),
-		span_notice("[surgeon] помещает что-то в [declent_ru(implant, ACCUSATIVE)]."),
+		span_notice("Вы помещаете [implant.declent_ru(ACCUSATIVE)] в [case]."),
+		span_notice("[surgeon] помещает [implant.declent_ru(ACCUSATIVE)] в [case]."),
+		span_notice("[surgeon] помещает что-то в [case.declent_ru(ACCUSATIVE)]."),
 	)
+// BANDASTATION EDIT END
 
 /datum/surgery_operation/basic/implant_removal/proc/get_case(mob/living/surgeon, mob/living/target)
 	var/list/locations = list(

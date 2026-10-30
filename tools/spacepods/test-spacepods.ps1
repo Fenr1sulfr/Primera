@@ -48,6 +48,7 @@ try {
         '/datum/unit_test/design_source',
         '/datum/unit_test/design_mats',
         '/datum/unit_test/movement_order_sanity',
+        '/datum/unit_test/chain_pull_through_space',
         '/datum/unit_test/move_pulled/to_turf',
         '/datum/unit_test/move_pulled/to_decal',
         '/datum/unit_test/teleporter',

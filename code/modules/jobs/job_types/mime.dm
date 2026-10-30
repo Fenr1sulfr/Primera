@@ -54,7 +54,9 @@
 		/obj/item/stamp/mime = 1,
 		)
 	belt = /obj/item/modular_computer/pda/crew/mime
-	ears = /obj/item/radio/headset/headset_srv
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_srv // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	gloves = /obj/item/clothing/gloves/color/white
 	head = /obj/item/clothing/head/beret/frenchberet
 	mask = /obj/item/clothing/mask/gas/mime

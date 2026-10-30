@@ -53,7 +53,9 @@
 		/obj/item/emergency_bed = 1,
 		)
 	belt = /obj/item/storage/belt/medical/paramedic
-	ears = /obj/item/radio/headset/headset_med
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_med // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	head = /obj/item/clothing/head/soft/paramedic
 	gloves = /obj/item/clothing/gloves/latex/nitrile
 	shoes = /obj/item/clothing/shoes/workboots/black

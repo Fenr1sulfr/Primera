@@ -83,7 +83,9 @@
 	name = "Knight"
 	uniform = /obj/item/clothing/under/costume/gamberson/military
 	mask = /obj/item/clothing/mask/bandana
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/jackboots
 	suit = /obj/item/clothing/suit/armor/riot/knight/greyscale
 	back = /obj/item/storage/backpack/cultpack

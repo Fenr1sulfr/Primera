@@ -2,7 +2,9 @@
 
 /datum/outfit/ctf
 	name = "CTF Rifleman (Solo)"
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	uniform = /obj/item/clothing/under/syndicate
 	suit = /obj/item/clothing/suit/armor/vest/ctf
 	shoes = /obj/item/clothing/shoes/combat
@@ -26,7 +28,9 @@
 	///Do they get an ID?
 	var/has_card = TRUE
 	///Which slots to apply TRAIT_NODROP to the items in
-	var/list/nodrop_slots = list(ITEM_SLOT_OCLOTHING, ITEM_SLOT_GLOVES, ITEM_SLOT_FEET, ITEM_SLOT_ICLOTHING, ITEM_SLOT_EARS)
+	// AI EDIT START - Support independent left and right ear slots
+	var/list/nodrop_slots = list(ITEM_SLOT_OCLOTHING, ITEM_SLOT_GLOVES, ITEM_SLOT_FEET, ITEM_SLOT_ICLOTHING, ITEM_SLOT_EAR_RIGHT, ITEM_SLOT_EAR_LEFT) // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 
 /datum/outfit/ctf/post_equip(mob/living/carbon/human/human_to_equip, visuals_only=FALSE)
 	if(visuals_only)
@@ -52,10 +56,14 @@
 		ADD_TRAIT(item_to_nodrop, TRAIT_NODROP, CAPTURE_THE_FLAG_TRAIT)
 
 	if(has_radio)
-		var/obj/item/radio/headset = human_to_equip.ears
-		headset.set_frequency(team_radio_freq)
-		headset.freqlock = RADIO_FREQENCY_LOCKED
-		headset.special_channels |= RADIO_SPECIAL_CENTCOM
+		// AI EDIT START - Dual ear slots
+		// BANDASTATION EDIT START - Dual ear slots
+		for(var/obj/item/radio/headset in list(human_to_equip.ear_right, human_to_equip.ear_left))
+			headset.set_frequency(team_radio_freq)
+			headset.freqlock = RADIO_FREQENCY_LOCKED
+			headset.special_channels |= RADIO_SPECIAL_CENTCOM
+		// BANDASTATION EDIT END
+		// AI EDIT END
 	human_to_equip.dna.species.stunmod = 0
 
 /datum/outfit/ctf/instagib

@@ -175,7 +175,9 @@
 	suit = /obj/item/clothing/suit/armor/vest/capcarapace/syndicate
 	suit_store = /obj/item/gun/ballistic/revolver/mateba
 	back = /obj/item/storage/backpack/satchel/leather
-	ears = /obj/item/radio/headset/syndicate/alt/leader
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/syndicate/alt/leader // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/thermal/eyepatch
 	head = /obj/item/clothing/head/hats/hos/cap/syndicate
 	mask = /obj/item/cigarette/cigar/havana
@@ -201,7 +203,9 @@
 	name = "Actor"
 	id = /obj/item/card/id/away/filmstudio
 	id_trim= /datum/id_trim/away/actor
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	uniform = /obj/item/clothing/under/suit/charcoal
 	back = /obj/item/storage/backpack/satchel
 	shoes = /obj/item/clothing/shoes/laceup

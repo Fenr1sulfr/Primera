@@ -1,5 +1,3 @@
-#define RESOLVE_ICON_STATE(worn_item) (worn_item.worn_icon_state || worn_item.icon_state)
-
 	///////////////////////
 	//UPDATE_ICONS SYSTEM//
 	///////////////////////
@@ -81,7 +79,9 @@ There are several things that need to be remembered:
 		if(HAS_TRAIT(uniform, TRAIT_NO_WORN_ICON) || (obscured_slots & HIDEJUMPSUIT))
 			return
 
-		var/target_overlay = uniform.icon_state
+		// AI EDIT START - Resolve the uniform state before applying its adjusted style
+		var/target_overlay = uniform.get_worn_icon_state(ITEM_SLOT_ICLOTHING) // BANDASTATION EDIT - Slot-specific worn states
+		// AI EDIT END
 		if(uniform.adjusted == ALT_STYLE)
 			target_overlay = "[target_overlay]_d"
 
@@ -108,9 +108,11 @@ There are several things that need to be remembered:
 		if(chest_is_dimorphic && (bodyshape & BODYSHAPE_HUMANOID) && physique == FEMALE && !(female_sprite_flags & NO_FEMALE_UNIFORM)) //Agggggggghhhhh
 			woman = TRUE
 
-		if(!icon_exists(icon_file, RESOLVE_ICON_STATE(uniform)))
+		// AI EDIT START - Validate the same adjusted state that is rendered
+		if(!icon_exists(icon_file, target_overlay)) // BANDASTATION EDIT - Slot-specific worn states
 			icon_file = DEFAULT_UNIFORM_FILE
 			handled_by_bodyshape = FALSE
+		// AI EDIT END
 
 		// BANDASTATION ADDITION START - Species clothing icons
 		var/species_icon = uniform.get_species_worn_icon(get_bodypart(BODY_ZONE_CHEST)?.limb_id, target_overlay)
@@ -128,6 +130,9 @@ There are several things that need to be remembered:
 			override_file = handled_by_bodyshape ? icon_file : null,
 			bodyshape = species_icon ? (bodyshape & ~BODYSHAPE_DIGITIGRADE) : bodyshape, // BANDASTATION EDIT - Fitted uniforms already include their leg shape
 			female_version = uniform.female_version, // BANDASTATION EDIT - more masks for female clothing
+			// AI EDIT START - Pass the actual equipment slot to worn rendering
+			slot_id = ITEM_SLOT_ICLOTHING, // BANDASTATION ADDITION - Slot-specific worn states
+			// AI EDIT END
 		)
 
 		apply_height(uniform_overlay, ENTIRE_BODY)
@@ -148,7 +153,9 @@ There are several things that need to be remembered:
 			return
 
 		var/icon_file = 'icons/mob/clothing/id.dmi'
-		var/mutable_appearance/id_overlay = wear_id.build_worn_icon(default_layer = ID_LAYER, default_icon_file = icon_file, bodyshape = bodyshape)
+		// AI EDIT START - Pass the actual equipment slot to worn rendering
+		var/mutable_appearance/id_overlay = wear_id.build_worn_icon(default_layer = ID_LAYER, default_icon_file = icon_file, bodyshape = bodyshape, slot_id = ITEM_SLOT_ID) // BANDASTATION EDIT - Slot-specific worn states
+		// AI EDIT END
 
 		apply_height(id_overlay, UPPER_BODY)
 		var/obj/item/bodypart/chest/my_chest = get_bodypart(BODY_ZONE_CHEST)
@@ -189,10 +196,14 @@ There are several things that need to be remembered:
 
 	var/icon_file = 'icons/mob/clothing/hands.dmi'
 	// BANDASTATION EDIT START - Species clothing icons
-	var/species_icon = gloves.get_species_worn_icon(dna?.species?.id)
+	// AI EDIT START - Match the fitted sprite to the slot-specific worn state
+	var/species_icon = gloves.get_species_worn_icon(dna?.species?.id, gloves.get_worn_icon_state(ITEM_SLOT_GLOVES))
+	// AI EDIT END
 	// BANDASTATION EDIT END - Species clothing icons
 
-	var/mutable_appearance/gloves_overlay = gloves.build_worn_icon(default_layer = GLOVES_LAYER, default_icon_file = icon_file, override_file = species_icon, bodyshape = bodyshape) // BANDASTATION EDIT - Species clothing icons
+	// AI EDIT START - Pass the actual equipment slot to worn rendering
+	var/mutable_appearance/gloves_overlay = gloves.build_worn_icon(default_layer = GLOVES_LAYER, default_icon_file = icon_file, override_file = species_icon, bodyshape = bodyshape, slot_id = ITEM_SLOT_GLOVES) // BANDASTATION EDIT - Species clothing icons
+	// AI EDIT END
 
 	var/feature_y_offset = 0
 	//needs to be typed, hand_bodyparts can have nulls
@@ -233,10 +244,14 @@ There are several things that need to be remembered:
 
 		var/icon_file = 'icons/mob/clothing/eyes.dmi'
 		// BANDASTATION EDIT START - Species clothing icons
-		var/species_icon = glasses.get_species_worn_icon(my_head.limb_id)
+		// AI EDIT START - Match the fitted sprite to the slot-specific worn state
+		var/species_icon = glasses.get_species_worn_icon(my_head.limb_id, glasses.get_worn_icon_state(ITEM_SLOT_EYES))
+		// AI EDIT END
 		// BANDASTATION EDIT END - Species clothing icons
 
-		var/mutable_appearance/glasses_overlay = glasses.build_worn_icon(default_layer = GLASSES_LAYER, default_icon_file = icon_file, override_file = species_icon, bodyshape = bodyshape) // BANDASTATION EDIT - Species clothing icons
+		// AI EDIT START - Pass the actual equipment slot to worn rendering
+		var/mutable_appearance/glasses_overlay = glasses.build_worn_icon(default_layer = GLASSES_LAYER, default_icon_file = icon_file, override_file = species_icon, bodyshape = bodyshape, slot_id = ITEM_SLOT_EYES) // BANDASTATION EDIT - Species clothing icons
+		// AI EDIT END
 		apply_height(glasses_overlay, UPPER_BODY)
 		my_head.worn_glasses_offset?.apply_offset(glasses_overlay)
 		overlays_standing[GLASSES_LAYER] = glasses_overlay
@@ -245,29 +260,35 @@ There are several things that need to be remembered:
 
 /mob/living/carbon/human/update_worn_ears()
 	remove_overlay(EARS_LAYER)
-	hud_used?.update_inventory_slot(ITEM_SLOT_EARS)
+	// AI EDIT START - Independent ears share the existing clothing layer
+	// BANDASTATION EDIT START - Independent ears share the existing clothing layer.
+	hud_used?.update_inventory_slot(ITEM_SLOT_EAR_RIGHT)
+	hud_used?.update_inventory_slot(ITEM_SLOT_EAR_LEFT)
 
 	var/obj/item/bodypart/head/my_head = get_bodypart(BODY_ZONE_HEAD)
-	if(isnull(my_head)) //decapitated
+	if(isnull(my_head) || (obscured_slots & HIDEEARS))
 		return
 
-	if(ears)
-		var/obj/item/worn_item = ears
-		if(HAS_TRAIT(worn_item, TRAIT_NO_WORN_ICON) || (obscured_slots & HIDEEARS))
-			return
+	var/list/ear_overlays = list()
+	for(var/ear_slot in list(ITEM_SLOT_EAR_RIGHT, ITEM_SLOT_EAR_LEFT))
+		var/obj/item/worn_item = ear_slot == ITEM_SLOT_EAR_RIGHT ? ear_right : ear_left
+		if(!worn_item || HAS_TRAIT(worn_item, TRAIT_NO_WORN_ICON))
+			continue
 
-		var/icon_file = 'icons/mob/clothing/ears.dmi'
-
-		// BANDASTATION EDIT START - Species clothing icons
-		var/species_icon = ears.get_species_worn_icon(my_head.limb_id)
-		// BANDASTATION EDIT END - Species clothing icons
-
-		var/mutable_appearance/ears_overlay = ears.build_worn_icon(default_layer = EARS_LAYER, default_icon_file = icon_file, override_file = species_icon, bodyshape = bodyshape) // BANDASTATION EDIT - Species clothing icons
-
+		var/mutable_appearance/ears_overlay = worn_item.build_worn_icon(
+			default_layer = EARS_LAYER,
+			override_file = worn_item.get_worn_icon_for_slot(ear_slot, my_head.limb_id),
+			bodyshape = bodyshape,
+			slot_id = ear_slot,
+		)
 		apply_height(ears_overlay, UPPER_BODY)
 		my_head.worn_ears_offset?.apply_offset(ears_overlay)
-		overlays_standing[EARS_LAYER] = ears_overlay
+		ear_overlays += ears_overlay
+	if(length(ear_overlays))
+		overlays_standing[EARS_LAYER] = ear_overlays
 	apply_overlay(EARS_LAYER)
+	// BANDASTATION EDIT END - Independent ears share the existing clothing layer.
+	// AI EDIT END
 
 /mob/living/carbon/human/update_worn_neck()
 	remove_overlay(NECK_LAYER)
@@ -281,8 +302,10 @@ There are several things that need to be remembered:
 
 		var/icon_file = 'icons/mob/clothing/neck.dmi'
 
-		var/species_icon = worn_item.get_species_worn_icon(get_bodypart(BODY_ZONE_CHEST)?.limb_id) // BANDASTATION ADDITION - Species clothing icons
-		var/mutable_appearance/neck_overlay = worn_item.build_worn_icon(default_layer = NECK_LAYER, default_icon_file = icon_file, override_file = species_icon, bodyshape = bodyshape) // BANDASTATION EDIT - Species clothing icons
+		// AI EDIT START - Match fitted and rendered neck states to the equipment slot
+		var/species_icon = worn_item.get_species_worn_icon(get_bodypart(BODY_ZONE_CHEST)?.limb_id, worn_item.get_worn_icon_state(ITEM_SLOT_NECK)) // BANDASTATION ADDITION - Species clothing icons
+		var/mutable_appearance/neck_overlay = worn_item.build_worn_icon(default_layer = NECK_LAYER, default_icon_file = icon_file, override_file = species_icon, bodyshape = bodyshape, slot_id = ITEM_SLOT_NECK) // BANDASTATION EDIT - Species clothing icons
+		// AI EDIT END
 		apply_height(neck_overlay, ENTIRE_BODY)
 		var/obj/item/bodypart/chest/my_chest = get_bodypart(BODY_ZONE_CHEST)
 		my_chest?.worn_neck_offset?.apply_offset(neck_overlay)
@@ -306,10 +329,14 @@ There are several things that need to be remembered:
 		var/icon_file = DEFAULT_SHOES_FILE
 
 		// BANDASTATION EDIT START - Species clothing icons
-		var/species_icon = shoes.get_species_worn_icon(dna?.species?.id)
+		// AI EDIT START - Match the fitted sprite to the slot-specific worn state
+		var/species_icon = shoes.get_species_worn_icon(dna?.species?.id, shoes.get_worn_icon_state(ITEM_SLOT_FEET))
+		// AI EDIT END
 		// BANDASTATION EDIT END - Species clothing icons
 
-		var/mutable_appearance/shoes_overlay = shoes.build_worn_icon(default_layer = SHOES_LAYER, default_icon_file = icon_file, override_file = species_icon, bodyshape = species_icon ? (bodyshape & ~BODYSHAPE_DIGITIGRADE) : bodyshape) // BANDASTATION EDIT - Species clothing icons
+		// AI EDIT START - Pass the actual equipment slot to worn rendering
+		var/mutable_appearance/shoes_overlay = shoes.build_worn_icon(default_layer = SHOES_LAYER, default_icon_file = icon_file, override_file = species_icon, bodyshape = species_icon ? (bodyshape & ~BODYSHAPE_DIGITIGRADE) : bodyshape, slot_id = ITEM_SLOT_FEET) // BANDASTATION EDIT - Species clothing icons
+		// AI EDIT END
 
 		var/feature_y_offset = 0
 		for (var/body_zone in GLOB.leg_zones)
@@ -332,7 +359,9 @@ There are several things that need to be remembered:
 			return
 
 
-		var/mutable_appearance/s_store_overlay = worn_item.build_worn_icon(default_layer = SUIT_STORE_LAYER, default_icon_file = 'icons/mob/clothing/belt_mirror.dmi', bodyshape = bodyshape)
+		// AI EDIT START - Pass the actual equipment slot to worn rendering
+		var/mutable_appearance/s_store_overlay = worn_item.build_worn_icon(default_layer = SUIT_STORE_LAYER, default_icon_file = 'icons/mob/clothing/belt_mirror.dmi', bodyshape = bodyshape, slot_id = ITEM_SLOT_SUITSTORE) // BANDASTATION EDIT - Slot-specific worn states
+		// AI EDIT END
 		apply_height(s_store_overlay, ENTIRE_BODY)
 		var/obj/item/bodypart/chest/my_chest = get_bodypart(BODY_ZONE_CHEST)
 		my_chest?.worn_suit_storage_offset?.apply_offset(s_store_overlay)
@@ -358,7 +387,9 @@ There are several things that need to be remembered:
 		var/mutant_override = FALSE
 
 		var/species_id = get_bodypart(BODY_ZONE_HEAD)?.limb_id
-		var/species_icon = worn_item.get_species_worn_icon(species_id)
+		// AI EDIT START - Match the fitted sprite to the slot-specific worn state
+		var/species_icon = worn_item.get_species_worn_icon(species_id, worn_item.get_worn_icon_state(ITEM_SLOT_HEAD))
+		// AI EDIT END
 		if(species_icon)
 			icon_file = species_icon
 			mutant_override = TRUE
@@ -366,11 +397,15 @@ There are several things that need to be remembered:
 			icon_file = icon_files_species[species_id]
 			mutant_override = FALSE
 
-		if(!(icon_exists(icon_file, RESOLVE_ICON_STATE(worn_item))))
+		// AI EDIT START - Validate the slot-specific head state
+		if(!(icon_exists(icon_file, worn_item.get_worn_icon_state(ITEM_SLOT_HEAD))))
 			icon_file = 'icons/mob/clothing/head/default.dmi'
 			mutant_override = FALSE
+		// AI EDIT END
 
-		var/mutable_appearance/head_overlay = head.build_worn_icon(default_layer = HEAD_LAYER, default_icon_file = icon_file, override_file = mutant_override ? icon_file : null, bodyshape = bodyshape)
+		// AI EDIT START - Pass the actual equipment slot to worn rendering
+		var/mutable_appearance/head_overlay = head.build_worn_icon(default_layer = HEAD_LAYER, default_icon_file = icon_file, override_file = mutant_override ? icon_file : null, bodyshape = bodyshape, slot_id = ITEM_SLOT_HEAD)
+		// AI EDIT END
 		// BANDASTATION EDIT END: SPECIES CLOTHING ICONS
 		apply_height(head_overlay, UPPER_BODY)
 		var/obj/item/bodypart/head/my_head = get_bodypart(BODY_ZONE_HEAD)
@@ -391,10 +426,14 @@ There are several things that need to be remembered:
 		var/icon_file = 'icons/mob/clothing/belt.dmi'
 
 		// BANDASTATION EDIT START - Species clothing icons
-		var/species_icon = belt.get_species_worn_icon(dna?.species?.id)
+		// AI EDIT START - Match the fitted sprite to the slot-specific worn state
+		var/species_icon = belt.get_species_worn_icon(dna?.species?.id, belt.get_worn_icon_state(ITEM_SLOT_BELT))
+		// AI EDIT END
 		// BANDASTATION EDIT END - Species clothing icons
 
-		var/mutable_appearance/belt_overlay = belt.build_worn_icon(default_layer = BELT_LAYER, default_icon_file = icon_file, override_file = species_icon, bodyshape = bodyshape) // BANDASTATION EDIT - Species clothing icons
+		// AI EDIT START - Pass the actual equipment slot to worn rendering
+		var/mutable_appearance/belt_overlay = belt.build_worn_icon(default_layer = BELT_LAYER, default_icon_file = icon_file, override_file = species_icon, bodyshape = bodyshape, slot_id = ITEM_SLOT_BELT) // BANDASTATION EDIT - Species clothing icons
+		// AI EDIT END
 
 		apply_height(belt_overlay, ENTIRE_BODY)
 		var/obj/item/bodypart/chest/my_chest = get_bodypart(BODY_ZONE_CHEST)
@@ -423,7 +462,9 @@ There are several things that need to be remembered:
 		var/mutant_override = FALSE
 
 		var/obj/item/bodypart/chest/bodypart_chest = src.get_bodypart(BODY_ZONE_CHEST)
-		var/species_icon = worn_item.get_species_worn_icon(bodypart_chest?.limb_id)
+		// AI EDIT START - Match the fitted sprite to the slot-specific worn state
+		var/species_icon = worn_item.get_species_worn_icon(bodypart_chest?.limb_id, worn_item.get_worn_icon_state(ITEM_SLOT_OCLOTHING)) // BANDASTATION EDIT - Slot-specific worn states
+		// AI EDIT END
 		if(species_icon)
 			icon_file = species_icon
 			mutant_override = TRUE
@@ -431,11 +472,15 @@ There are several things that need to be remembered:
 			icon_file = icon_files_species[bodypart_chest?.limb_id]
 			mutant_override = FALSE
 
-		if(!(icon_exists(icon_file, RESOLVE_ICON_STATE(worn_item))))
+		// AI EDIT START - Validate the slot-specific suit state
+		if(!(icon_exists(icon_file, worn_item.get_worn_icon_state(ITEM_SLOT_OCLOTHING)))) // BANDASTATION EDIT - Slot-specific worn states
 			icon_file = DEFAULT_SUIT_FILE
 			mutant_override = FALSE
+		// AI EDIT END
 
-		var/mutable_appearance/suit_overlay = wear_suit.build_worn_icon(default_layer = SUIT_LAYER, default_icon_file = icon_file, override_file = mutant_override ? icon_file : null, bodyshape = bodyshape)
+		// AI EDIT START - Pass the actual equipment slot to worn rendering
+		var/mutable_appearance/suit_overlay = wear_suit.build_worn_icon(default_layer = SUIT_LAYER, default_icon_file = icon_file, override_file = mutant_override ? icon_file : null, bodyshape = bodyshape, slot_id = ITEM_SLOT_OCLOTHING) // BANDASTATION EDIT - Slot-specific worn states
+		// AI EDIT END
 		apply_height(suit_overlay, ENTIRE_BODY)
 		var/obj/item/bodypart/chest/my_chest = get_bodypart(BODY_ZONE_CHEST)
 		my_chest?.worn_suit_offset?.apply_offset(suit_overlay)
@@ -470,7 +515,9 @@ There are several things that need to be remembered:
 		var/mutant_override = FALSE
 
 		var/obj/item/bodypart/head/bodypart_head = src.get_bodypart(BODY_ZONE_HEAD)
-		var/species_icon = worn_item.get_species_worn_icon(bodypart_head?.limb_id)
+		// AI EDIT START - Match the fitted sprite to the slot-specific worn state
+		var/species_icon = worn_item.get_species_worn_icon(bodypart_head?.limb_id, worn_item.get_worn_icon_state(ITEM_SLOT_MASK)) // BANDASTATION EDIT - Slot-specific worn states
+		// AI EDIT END
 		if(species_icon)
 			icon_file = species_icon
 			mutant_override = TRUE
@@ -478,11 +525,15 @@ There are several things that need to be remembered:
 			icon_file = icon_files_species[bodypart_head?.limb_id]
 			mutant_override = FALSE
 
-		if(!(icon_exists(icon_file, RESOLVE_ICON_STATE(worn_item))))
+		// AI EDIT START - Validate the slot-specific mask state
+		if(!(icon_exists(icon_file, worn_item.get_worn_icon_state(ITEM_SLOT_MASK)))) // BANDASTATION EDIT - Slot-specific worn states
 			icon_file = 'icons/mob/clothing/mask.dmi'
 			mutant_override = FALSE
+		// AI EDIT END
 
-		var/mutable_appearance/mask_overlay = wear_mask.build_worn_icon(default_layer = FACEMASK_LAYER, default_icon_file = icon_file, override_file = mutant_override ? icon_file : null, bodyshape = bodyshape)
+		// AI EDIT START - Pass the actual equipment slot to worn rendering
+		var/mutable_appearance/mask_overlay = wear_mask.build_worn_icon(default_layer = FACEMASK_LAYER, default_icon_file = icon_file, override_file = mutant_override ? icon_file : null, bodyshape = bodyshape, slot_id = ITEM_SLOT_MASK) // BANDASTATION EDIT - Slot-specific worn states
+		// AI EDIT END
 		apply_height(mask_overlay, UPPER_BODY)
 		my_head.worn_mask_offset?.apply_offset(mask_overlay)
 	// BANDASTATION EDIT STOP - SPECIES CLOTHING ICONS
@@ -501,9 +552,13 @@ There are several things that need to be remembered:
 		var/icon_file = 'icons/mob/clothing/back.dmi'
 
 		// BANDASTATION EDIT START - Species clothing icons
-		var/species_icon = back.get_species_worn_icon(dna?.species?.id)
+		// AI EDIT START - Match the fitted sprite to the slot-specific worn state
+		var/species_icon = back.get_species_worn_icon(dna?.species?.id, back.get_worn_icon_state(ITEM_SLOT_BACK))
+		// AI EDIT END
 		// BANDASTATION EDIT END - Species clothing icons
-		var/mutable_appearance/back_overlay = back.build_worn_icon(default_layer = BACK_LAYER, default_icon_file = icon_file, override_file = species_icon, bodyshape = bodyshape) // BANDASTATION EDIT - Species clothing icons
+		// AI EDIT START - Pass the actual equipment slot to worn rendering
+		var/mutable_appearance/back_overlay = back.build_worn_icon(default_layer = BACK_LAYER, default_icon_file = icon_file, override_file = species_icon, bodyshape = bodyshape, slot_id = ITEM_SLOT_BACK) // BANDASTATION EDIT - Species clothing icons
+		// AI EDIT END
 
 		apply_height(back_overlay, ENTIRE_BODY)
 		var/obj/item/bodypart/chest/my_chest = get_bodypart(BODY_ZONE_CHEST)
@@ -670,10 +725,15 @@ generate/load female uniform sprites matching all previously decided variables
 	override_file = null,
 	bodyshape = NONE,
 	datum/female_uniform/female_version, // BANDASTATION EDIT - more masks for female clothing
+	// AI EDIT START - Accept the actual equipment slot for worn states
+	slot_id = NONE, // BANDASTATION ADDITION - Slot-specific worn states
+	// AI EDIT END
 )
 
 	//Find a valid icon_state from variables+arguments
-	var/t_state = override_state || (isinhands ? inhand_icon_state : worn_icon_state) || icon_state
+	// AI EDIT START - Resolve slot states without changing explicit or inhand overrides
+	var/t_state = override_state || (isinhands ? inhand_icon_state : get_worn_icon_state(slot_id)) || icon_state // BANDASTATION EDIT - Slot-specific worn states
+	// AI EDIT END
 	//Find a valid icon file from variables+arguments
 	var/file2use = override_file || (isinhands ? null : worn_icon) || default_icon_file
 	//Find a valid layer from variables+arguments
@@ -755,6 +815,7 @@ generate/load female uniform sprites matching all previously decided variables
 			return list("x" = 0, "y" = 0)//Handle held offsets
 
 /mob/living/carbon/human/update_body(is_creating = FALSE)
+	sync_underclothing() // BANDASTATION ADDITION - Keep physical garments in sync with appearance changes.
 	remove_overlay(BODY_LAYER)
 	var/list/clothing_overlays = get_underwear_overlays()
 	if(length(clothing_overlays))
@@ -1031,7 +1092,6 @@ generate/load female uniform sprites matching all previously decided variables
 
 	return appearance
 
-#undef RESOLVE_ICON_STATE
 
 // Wide organs or bodyparts shouldn't offset human HUD directly
 /mob/living/carbon/human/get_hud_x_offset()

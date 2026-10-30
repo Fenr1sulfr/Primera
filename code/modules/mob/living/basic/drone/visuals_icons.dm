@@ -32,7 +32,9 @@
 		var/used_head_icon = 'icons/mob/clothing/head/utility.dmi'
 		if(istype(head, /obj/item/clothing/mask))
 			used_head_icon = 'icons/mob/clothing/mask.dmi'
-		var/mutable_appearance/head_overlay = head.build_worn_icon(default_layer = DRONE_HEAD_LAYER, default_icon_file = used_head_icon)
+		// AI EDIT START - Render drone hats using their head-slot state
+		var/mutable_appearance/head_overlay = head.build_worn_icon(default_layer = DRONE_HEAD_LAYER, default_icon_file = used_head_icon, slot_id = ITEM_SLOT_HEAD) // BANDASTATION EDIT - Slot-specific worn states
+		// AI EDIT END
 		head_overlay.pixel_z -= 15
 
 		drone_overlays[DRONE_HEAD_LAYER] = head_overlay

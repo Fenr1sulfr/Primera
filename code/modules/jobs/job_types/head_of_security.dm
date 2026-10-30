@@ -66,7 +66,9 @@
 		/obj/item/melee/baton/security/loaded/hos = 1,
 		)
 	belt = /obj/item/modular_computer/pda/crew/heads/hos
-	ears = /obj/item/radio/headset/heads/hos/alt
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/heads/hos/alt // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/security/sunglasses
 	gloves = /obj/item/clothing/gloves/color/black/security
 	head = /obj/item/clothing/head/hats/hos/beret

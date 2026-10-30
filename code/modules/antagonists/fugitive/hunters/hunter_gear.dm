@@ -214,11 +214,19 @@
 	desc = "Гарнитура, предназначенная для усиления психических волн. Защищает уши от светошумовых гранат."
 	icon_state = "psyker_headset"
 	worn_icon_state = "syndie_headset"
+	// AI EDIT START - Keep protected earpieces on their original worn state
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = null
+	// AI EDIT END
 	freerange = TRUE
 
 /obj/item/radio/headset/psyker/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/wearertargeting/earprotection)
+	// AI EDIT START - Reserve both ear slots for protected earpieces
+	// BANDASTATION ADDITION - Protected earpieces occupy both ears
+	AddComponent(/datum/component/occupies_slots, ITEM_SLOT_EARS)
+	// AI EDIT END
 	set_frequency(FREQ_FUGITIVE_HUNTER)
 
 /obj/item/radio/headset/psyker/equipped(mob/user, slot, initial)
@@ -237,11 +245,19 @@
 	desc = "A psychic headset designed for the elite psyker seers."
 	icon_state = "med_headset_alt"
 	worn_icon_state = "med_headset_alt"
+	// AI EDIT START - Keep protected earpieces on their original worn state
+	// BANDASTATION ADDITION - Per-slot worn headset states
+	worn_icon_state_by_slot = null
+	// AI EDIT END
 	freerange = TRUE
 
 /obj/item/radio/headset/psyker_seer/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/wearertargeting/earprotection)
+	// AI EDIT START - Reserve both ear slots for protected earpieces
+	// BANDASTATION ADDITION - Protected earpieces occupy both ears
+	AddComponent(/datum/component/occupies_slots, ITEM_SLOT_EARS)
+	// AI EDIT END
 	set_frequency(FREQ_FUGITIVE_HUNTER)
 
 /obj/item/storage/belt/holster/psyker

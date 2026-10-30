@@ -428,9 +428,15 @@
 			. += span_warning("<B>[t_His] глаза светятся неестественной красной аурой!</B>")
 		else if(HAS_TRAIT(src, TRAIT_BLOODSHOT_EYES))
 			. += span_warning("<B>[t_His] глаза налиты кровью!</B>")
-	//ears
-	if(ears && !(obscured_slots & HIDEEARS) && !HAS_TRAIT(ears, TRAIT_EXAMINE_SKIP))
-		. += "[t_He] носит [ears.examine_title(user, declent = ACCUSATIVE)] на ушах."
+	// AI EDIT START - Separate ear slots
+	// BANDASTATION EDIT START - Separate ear slots
+	if(!(obscured_slots & HIDEEARS))
+		if(ear_right && !HAS_TRAIT(ear_right, TRAIT_EXAMINE_SKIP))
+			. += "[t_He] носит [ear_right.examine_title(user, declent = ACCUSATIVE)] на правом ухе."
+		if(ear_left && !HAS_TRAIT(ear_left, TRAIT_EXAMINE_SKIP))
+			. += "[t_He] носит [ear_left.examine_title(user, declent = ACCUSATIVE)] на левом ухе."
+	// BANDASTATION EDIT END
+	// AI EDIT END
 	//suit/armor
 	if(wear_suit && !HAS_TRAIT(wear_suit, TRAIT_EXAMINE_SKIP))
 		. += "[t_He] носит [wear_suit.examine_title(user, declent = ACCUSATIVE)]."

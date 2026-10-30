@@ -44,7 +44,9 @@
 		/obj/item/t_scanner/adv_mining_scanner/lesser = 1,
 	)
 	belt = /obj/item/modular_computer/pda/crew/shaftminer
-	ears = /obj/item/radio/headset/headset_cargo/mining
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cargo/mining // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	gloves = /obj/item/clothing/gloves/color/black
 	shoes = /obj/item/clothing/shoes/workboots/mining
 	l_pocket = /obj/item/reagent_containers/hypospray/medipen/survival

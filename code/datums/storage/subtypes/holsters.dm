@@ -13,6 +13,7 @@
 
 	set_holdable(list(
 		/obj/item/gun/ballistic/automatic/pistol,
+		/obj/item/gun/ballistic/automatic/laser/pistol, // BANDASTATION ADDITION - HoS sidearm choice
 		/obj/item/gun/ballistic/revolver,
 		/obj/item/gun/energy/e_gun/mini,
 		/obj/item/gun/energy/disabler,

@@ -231,13 +231,14 @@
 	if(old_loc && leave_footprints && !broken && !burnt && ishuman(arrived))
 		add_footprint(arrived, get_dir(old_loc, src))
 
-	// BANDASTATION EDIT - Multi-tile movers transition once from Moved(), after every footprint Entered callback.
-	if(!is_multi_tile_object(arrived))
+	// BANDASTATION EDIT - Only linked turfs transfer; multi-tile movers transition once from Moved().
+	if(destination_z && !is_multi_tile_object(arrived))
 		transfer_occupant(arrived)
 
 /turf/open/initialize_occupant(atom/movable/occupant)
 	. = ..()
-	transfer_occupant(occupant)
+	if(destination_z) // BANDASTATION EDIT - Ordinary turf initialization has no sector transfer to perform.
+		transfer_occupant(occupant)
 
 /// Moves an occupant through a configured connection to another z-level.
 /turf/open/proc/transfer_occupant(atom/movable/occupant)

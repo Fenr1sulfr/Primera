@@ -125,6 +125,13 @@
 		SPECIES_VOX = 'icons/bandastation/mob/species/vox/clothing/ears.dmi'
 	)
 
+// AI EDIT START - Fit headset side states to the existing Vox ear artwork
+/obj/item/radio/headset
+	worn_icon_species = list(
+		SPECIES_VOX = 'icons/bandastation/mob/species/vox/clothing/ears.dmi',
+	)
+// AI EDIT END
+
 /obj/item/clothing/gloves
 	worn_icon_species = list(
 		SPECIES_VOX = 'icons/bandastation/mob/species/vox/clothing/hands.dmi'

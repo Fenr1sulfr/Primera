@@ -5,7 +5,9 @@
 	shoes = /obj/item/clothing/shoes/combat
 	gloves = /obj/item/clothing/gloves/combat
 	back = /obj/item/storage/backpack/fireproof
-	ears = /obj/item/radio/headset/syndicate/alt
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/syndicate/alt // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	l_pocket = /obj/item/modular_computer/pda/nukeops
 	r_pocket = /obj/item/pen/edagger
 	id = /obj/item/card/id/advanced/chameleon/elite
@@ -59,7 +61,9 @@
 
 	// We don't require the nukiebase be loaded to function, but lets go ahead and kick off loading just in case
 	INVOKE_ASYNC(SSmapping, TYPE_PROC_REF(/datum/controller/subsystem/mapping, lazy_load_template), LAZY_TEMPLATE_KEY_NUKIEBASE)
-	var/obj/item/radio/radio = nukie.ears
+	// AI EDIT START - Support independent left and right ear slots
+	var/obj/item/radio/radio = nukie.ear_right // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	radio.set_frequency(FREQ_SYNDICATE)
 	radio.freqlock = RADIO_FREQENCY_LOCKED
 	if(command_radio)

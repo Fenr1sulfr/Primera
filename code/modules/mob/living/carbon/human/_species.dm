@@ -421,10 +421,6 @@ GLOBAL_LIST_EMPTY(features_by_species)
 		human_who_gained_species.add_blocked_language(language, SPOKEN_LANGUAGE, LANGUAGE_SPECIES)
 	for(var/language in gaining_holder.blocked_understanding)
 		human_who_gained_species.add_blocked_language(language, UNDERSTOOD_LANGUAGE, LANGUAGE_SPECIES)
-	// BANDASTATION ADDITION START - Upbringing determines learned languages after character setup
-	if(human_who_gained_species.get_language_holder().has_sierra_background_languages())
-		human_who_gained_species.remove_sierra_species_languages()
-	// BANDASTATION ADDITION END
 	if(regenerate_icons)
 		human_who_gained_species.regenerate_icons()
 
@@ -558,6 +554,10 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			return FALSE
 
 	switch(slot)
+		// BANDASTATION ADDITION START - Removable underclothing
+		if(ITEM_SLOT_UNDERWEAR, ITEM_SLOT_UNDERSHIRT, ITEM_SLOT_SOCKS)
+			return istype(I, /obj/item/clothing/underwear) && H.can_wear_underclothing(slot)
+		// BANDASTATION ADDITION END
 		if(ITEM_SLOT_HANDS)
 			if(!(H.mobility_flags & MOBILITY_PICKUP))
 				return FALSE
@@ -605,7 +605,9 @@ GLOBAL_LIST_EMPTY(features_by_species)
 			if(!H.get_bodypart(BODY_ZONE_HEAD))
 				return FALSE
 			return equip_delay_self_check(I, H, bypass_equip_delay_self)
-		if(ITEM_SLOT_EARS)
+		// AI EDIT START - Support independent left and right ear slots
+		if(ITEM_SLOT_EAR_RIGHT, ITEM_SLOT_EAR_LEFT) // BANDASTATION EDIT - Separate ear slots
+		// AI EDIT END
 			if(!H.get_bodypart(BODY_ZONE_HEAD))
 				return FALSE
 			return equip_delay_self_check(I, H, bypass_equip_delay_self)

@@ -55,27 +55,50 @@
 	var/obj/item/organ/brain/cybernetic/ai/brain = get_organ_slot(ORGAN_SLOT_BRAIN)
 	if(istype(brain))
 		return TRUE
-	var/obj/item/radio/headset/dongle = ears
-	if(!istype(dongle))
-		return FALSE
-	return dongle.special_channels & RADIO_SPECIAL_BINARY
+	// AI EDIT START - Dual ear slots
+	// BANDASTATION EDIT START - Dual ear slots
+	for(var/obj/item/radio/headset/dongle in list(ear_right, ear_left))
+		if(dongle.special_channels & RADIO_SPECIAL_BINARY)
+			return TRUE
+	return FALSE
+	// BANDASTATION EDIT END
+	// AI EDIT END
+
+// AI EDIT START - Dual ear slots
+// BANDASTATION ADDITION START - Dual ear slots
+/// Select one transmitter so wearing two headsets does not duplicate outgoing messages.
+/mob/living/carbon/human/proc/get_headset_for_channel(channel)
+	for(var/obj/item/radio/headset/headset in list(ear_right, ear_left))
+		if(!headset.is_on() || !headset.get_broadcasting() || headset.wires.is_cut(WIRE_TX))
+			continue
+		if(channel)
+			if(channel == MODE_DEPARTMENT && !length(headset.channels))
+				continue
+			var/headset_channel = channel == MODE_DEPARTMENT ? headset.channels[1] : channel
+			if(!LAZYACCESS(headset.channels, headset_channel))
+				continue
+		return headset
+	return null
+// BANDASTATION ADDITION END
+// AI EDIT END
 
 /mob/living/carbon/human/radio(message, list/message_mods = list(), list/spans, language) //Poly has a copy of this, lazy bastard
 	. = ..()
 	if(.)
 		return
 
+	// AI EDIT START - Dual ear slots
+	// BANDASTATION EDIT START - Dual ear slots
+	var/channel = message_mods[RADIO_EXTENSION]
 	if(message_mods[MODE_HEADSET])
-		if(ears)
-			ears.talk_into(src, message, , spans, language, message_mods)
-		return ITALICS | REDUCE_RANGE
-	else if(message_mods[RADIO_EXTENSION] == MODE_DEPARTMENT)
-		if(ears)
-			ears.talk_into(src, message, message_mods[RADIO_EXTENSION], spans, language, message_mods)
-		return ITALICS | REDUCE_RANGE
-	else if(GLOB.default_radio_channels[message_mods[RADIO_EXTENSION]])
-		if(ears)
-			ears.talk_into(src, message, message_mods[RADIO_EXTENSION], spans, language, message_mods)
-			return ITALICS | REDUCE_RANGE
+		channel = null
+	else if(channel != MODE_DEPARTMENT && !GLOB.default_radio_channels[channel])
+		return FALSE
 
+	var/obj/item/radio/headset/headset = get_headset_for_channel(channel)
+	headset?.talk_into(src, message, channel, spans, language, message_mods)
+	if(message_mods[MODE_HEADSET] || channel == MODE_DEPARTMENT || ear_right || ear_left)
+		return ITALICS | REDUCE_RANGE
 	return FALSE
+	// BANDASTATION EDIT END
+	// AI EDIT END

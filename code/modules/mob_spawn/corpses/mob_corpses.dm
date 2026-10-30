@@ -13,7 +13,9 @@
 	suit = /obj/item/clothing/suit/armor/vest
 	shoes = /obj/item/clothing/shoes/combat
 	gloves = /obj/item/clothing/gloves/tackler/combat/insulated
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	mask = /obj/item/clothing/mask/gas
 	head = /obj/item/clothing/head/helmet/swat
 	back = /obj/item/storage/backpack
@@ -31,7 +33,9 @@
 	uniform = /obj/item/clothing/under/syndicate
 	shoes = /obj/item/clothing/shoes/combat
 	gloves = /obj/item/clothing/gloves/tackler/combat/insulated
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	mask = /obj/item/clothing/mask/gas/syndicate
 	back = /obj/item/mod/control/pre_equipped/nuclear
 	r_pocket = /obj/item/tank/internals/emergency_oxygen
@@ -71,7 +75,9 @@
 	uniform = /obj/item/clothing/under/syndicate
 	shoes = /obj/item/clothing/shoes/combat
 	gloves = /obj/item/clothing/gloves/tackler/combat
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	mask = /obj/item/clothing/mask/gas/syndicate
 	back = /obj/item/mod/control/pre_equipped/elite
 	id = /obj/item/card/id/advanced/chameleon
@@ -91,7 +97,9 @@
 	neck = /obj/item/clothing/neck/large_scarf/syndie
 	glasses = /obj/item/clothing/glasses/cold
 	gloves = /obj/item/clothing/gloves/combat
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	mask = /obj/item/clothing/mask/gas
 	head = /obj/item/clothing/head/helmet/swat
 	back = /obj/item/storage/backpack
@@ -214,7 +222,9 @@
 	suit = /obj/item/clothing/suit/armor/bulletproof
 	shoes = /obj/item/clothing/shoes/combat
 	gloves = /obj/item/clothing/gloves/tackler/combat
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	head = /obj/item/clothing/head/helmet/alt
 	mask = /obj/item/clothing/mask/balaclava
 
@@ -228,7 +238,9 @@
 	uniform = /obj/item/clothing/under/costume/russian_officer
 	suit = /obj/item/clothing/suit/jacket/officer/tan
 	shoes = /obj/item/clothing/shoes/combat
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	head = /obj/item/clothing/head/costume/ushanka
 
 
@@ -313,7 +325,9 @@
 	suit = /obj/item/clothing/suit/armor/vest
 	shoes = /obj/item/clothing/shoes/combat
 	gloves = /obj/item/clothing/gloves/tackler/combat
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	mask = /obj/item/clothing/mask/gas/sechailer/swat
 	head = /obj/item/clothing/head/helmet/swat/nanotrasen
 	back = /obj/item/storage/backpack/security
@@ -332,7 +346,9 @@
 	suit = /obj/item/clothing/suit/armor/vest
 	shoes = /obj/item/clothing/shoes/combat
 	gloves = /obj/item/clothing/gloves/combat
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	mask = /obj/item/clothing/mask/gas/sechailer/swat
 	head = /obj/item/clothing/head/helmet/swat/nanotrasen
 	back = /obj/item/storage/backpack/security
@@ -368,7 +384,9 @@
 	suit = /obj/item/clothing/suit/apron/surgical
 	shoes = /obj/item/clothing/shoes/sneakers/white
 	gloves = /obj/item/clothing/gloves/latex/nitrile
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	back = /obj/item/storage/backpack/satchel/med
 	id = /obj/item/card/id/advanced
 	glasses = /obj/item/clothing/glasses/hud/health
@@ -384,7 +402,9 @@
 	suit = /obj/item/clothing/suit/hooded/bee_costume
 	shoes = /obj/item/clothing/shoes/sneakers/yellow
 	gloves = /obj/item/clothing/gloves/color/yellow
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	belt = /obj/item/storage/belt/fannypack/yellow/bee_terrorist
 	id = /obj/item/card/id/advanced
 	l_pocket = /obj/item/paper/fluff/bee_objectives

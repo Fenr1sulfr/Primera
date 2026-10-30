@@ -22,7 +22,9 @@
 	if(!damage_type)
 		return 0
 	var/unblocked_damage = 100
-	var/list/covering_clothing = list(head, wear_mask, wear_suit, w_uniform, back, gloves, shoes, belt, s_store, glasses, ears, wear_id, wear_neck) //Everything but pockets. Pockets are l_store and r_store. (if pockets were allowed, putting something armored, gloves or hats for example, would double up on the armor)
+	// AI EDIT START - Support independent left and right ear slots
+	var/list/covering_clothing = list(head, wear_mask, wear_suit, w_uniform, back, gloves, shoes, belt, s_store, glasses, ear_right, ear_left, wear_id, wear_neck) // BANDASTATION EDIT - Separate ear slots; everything but pockets.
+	// AI EDIT END
 	for(var/obj/item/clothing/clothing_item in covering_clothing)
 		if(clothing_item.body_parts_covered & def_zone.body_part)
 			unblocked_damage *= (100 - min(clothing_item.get_armor_rating(damage_type), 100)) * 0.01
@@ -421,8 +423,14 @@
 			. = get_bodypart(BODY_ZONE_HEAD)
 			if(.)
 				damaged += .
-			if(ears)
-				inventory_items_to_kill += ears
+			// AI EDIT START - Separate ear slots
+			// BANDASTATION EDIT START - Separate ear slots
+			if(ear_right)
+				inventory_items_to_kill += ear_right
+			if(ear_left)
+				inventory_items_to_kill += ear_left
+			// BANDASTATION EDIT END
+			// AI EDIT END
 
 	//CHEST//
 	if(!bodyzone_hit || bodyzone_hit == BODY_ZONE_CHEST)
@@ -621,8 +629,15 @@
 			head_clothes = head
 		if(head_clothes)
 			torn_items += head_clothes
-		else if(ears)
-			torn_items += ears
+		// AI EDIT START - Separate ear slots
+		// BANDASTATION EDIT START - Separate ear slots
+		else
+			if(ear_right)
+				torn_items += ear_right
+			if(ear_left)
+				torn_items += ear_left
+		// BANDASTATION EDIT END
+		// AI EDIT END
 
 	//CHEST//
 	if(!def_zone || def_zone == BODY_ZONE_CHEST)
@@ -681,8 +696,15 @@
 		burning_items += wear_mask
 	if(wear_neck && !(covered_slots & HIDENECK))
 		burning_items += wear_neck
-	if(ears && !(covered_slots & HIDEEARS))
-		burning_items += ears
+	// AI EDIT START - Separate ear slots
+	// BANDASTATION EDIT START - Separate ear slots
+	if(!(covered_slots & HIDEEARS))
+		if(ear_right)
+			burning_items += ear_right
+		if(ear_left)
+			burning_items += ear_left
+	// BANDASTATION EDIT END
+	// AI EDIT END
 	if(head)
 		burning_items += head
 
@@ -717,6 +739,15 @@
 	if (!gloves || (!(gloves.resistance_flags & FIRE_PROOF) && (gloves.resistance_flags & FLAMMABLE)))
 		for(var/obj/item/burnable_item as anything in get_held_items())
 			burning_items |= burnable_item
+
+	// BANDASTATION ADDITION START - Exposed underclothing burns with its wearer.
+	if(w_underwear && !underclothing_hidden(ITEM_SLOT_UNDERWEAR))
+		burning_items |= w_underwear
+	if(w_undershirt && !underclothing_hidden(ITEM_SLOT_UNDERSHIRT))
+		burning_items |= w_undershirt
+	if(w_socks && !underclothing_hidden(ITEM_SLOT_SOCKS))
+		burning_items |= w_socks
+	// BANDASTATION ADDITION END
 
 	for(var/obj/item/burning as anything in burning_items)
 		burning.fire_act((stacks * 25 * seconds_per_tick)) //damage taken is reduced to 2% of this value by fire_act()

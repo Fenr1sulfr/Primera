@@ -7,7 +7,9 @@
 	shoes = /obj/item/clothing/shoes/laceup
 	id = /obj/item/card/id/advanced/nanotrasen_official
 	id_trim = /datum/id_trim/job/nanotrasen_representative
-	ears = /obj/item/radio/headset/heads/nanotrasen_representative
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/heads/nanotrasen_representative
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/security/sunglasses // replace with skill glasses
 	implants = list(/obj/item/implant/mindshield)
 	neck = /obj/item/clothing/neck/tie/black/tied

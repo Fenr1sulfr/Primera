@@ -40,7 +40,6 @@
 	languages_native = list(/datum/language/vox)
 	liked_foodtypes = BUGS | TECH
 	disliked_foodtypes = NONE
-	modifies_speech = TRUE
 	var/static/list/speech_replacements = list(
 		new /regex("к+", "g") = "кик",
 		new /regex("К+", "g") = "КИК",

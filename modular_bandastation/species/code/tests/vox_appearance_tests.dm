@@ -260,7 +260,9 @@
 	var/list/slots = list(
 		"head" = ITEM_SLOT_HEAD, "helmet" = ITEM_SLOT_HEAD, "mask" = ITEM_SLOT_MASK,
 		"under" = ITEM_SLOT_ICLOTHING, "shoes" = ITEM_SLOT_FEET, "suit" = ITEM_SLOT_OCLOTHING,
-		"eyes" = ITEM_SLOT_EYES, "ears" = ITEM_SLOT_EARS, "gloves" = ITEM_SLOT_GLOVES,
+		// AI EDIT START - Support independent ear inventory slots
+		"eyes" = ITEM_SLOT_EYES, "ears" = ITEM_SLOT_EAR_RIGHT, "gloves" = ITEM_SLOT_GLOVES,
+		// AI EDIT END
 		"neck" = ITEM_SLOT_NECK, "back" = ITEM_SLOT_BACK, "belt" = ITEM_SLOT_BELT,
 	)
 	var/list/catalogues = list()
@@ -367,7 +369,9 @@
 	)
 	var/list/slots = list(
 		"head" = ITEM_SLOT_HEAD, "mask" = ITEM_SLOT_MASK, "under" = ITEM_SLOT_ICLOTHING, "shoes" = ITEM_SLOT_FEET,
-		"suit" = ITEM_SLOT_OCLOTHING, "eyes" = ITEM_SLOT_EYES, "ears" = ITEM_SLOT_EARS, "gloves" = ITEM_SLOT_GLOVES,
+		// AI EDIT START - Support independent ear inventory slots
+		"suit" = ITEM_SLOT_OCLOTHING, "eyes" = ITEM_SLOT_EYES, "ears" = ITEM_SLOT_EAR_RIGHT, "gloves" = ITEM_SLOT_GLOVES,
+		// AI EDIT END
 		"neck" = ITEM_SLOT_NECK, "back" = ITEM_SLOT_BACK, "belt" = ITEM_SLOT_BELT, "mod_control" = ITEM_SLOT_BACK,
 	)
 	for(var/category in categories)

@@ -3,7 +3,9 @@
 	uniform = /obj/item/clothing/under/abductor
 	shoes = /obj/item/clothing/shoes/combat
 	back = /obj/item/storage/backpack
-	ears = /obj/item/radio/headset/abductor
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/abductor // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 
 /datum/outfit/abductor/proc/link_to_console(mob/living/carbon/human/H, team_number)
 	var/datum/antagonist/abductor/A = H.mind.has_antag_datum(/datum/antagonist/abductor)

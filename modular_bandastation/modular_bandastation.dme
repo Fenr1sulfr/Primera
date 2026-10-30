@@ -26,6 +26,7 @@
 #include "bar_hookahs/_bar_hookahs.dme"
 #include "barsigns/_barsigns.dme"
 #include "borgs/_borgs.dme"
+#include "bug_reports/_bug_reports.dme"
 #include "changelog/_changelog.dme"
 #include "chat/_chat.dme"
 #include "chemistry/_chemistry.dme"
@@ -40,6 +41,9 @@
 #include "database220/_database220.dme"
 #include "discord/_discord.dme"
 #include "domains/_domains.dme"
+// AI EDIT START - Support independent ear inventory slots
+#include "dual_ears/_dual_ears.dme"
+// AI EDIT END
 #include "dynamic/_dynamic.dme"
 #include "emote_panel/_emote_panel.dme"
 #include "ert/_ert.dme"
@@ -94,6 +98,7 @@
 #include "ticket_manager/_ticket_manager.dme"
 #include "title_screen/_title_screen.dme"
 #include "translations/_translations.dme"
+#include "underclothing/_underclothing.dme"
 #include "tts/_tts.dme"
 #include "turfs/_turfs.dme"
 #include "uplink_items/_uplink_items.dme"

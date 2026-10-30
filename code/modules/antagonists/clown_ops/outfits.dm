@@ -5,7 +5,9 @@
 	mask = /obj/item/clothing/mask/gas/clown_hat/clownops
 	gloves = /obj/item/clothing/gloves/combat
 	back = /obj/item/storage/backpack/clown
-	ears = /obj/item/radio/headset/syndicate/alt
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/syndicate/alt // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	l_pocket = /obj/item/modular_computer/pda/nukeops
 	r_pocket = /obj/item/bikehorn
 	id = /obj/item/card/id/advanced/chameleon/elite

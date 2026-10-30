@@ -269,6 +269,7 @@
 
 /// The native robotic voicebox provides synthetic speech and local encoded audio language.
 /obj/item/organ/tongue/robot/ipc
+	custom_materials = list(/datum/material/iron = HALF_SHEET_MATERIAL_AMOUNT, /datum/material/glass = SHEET_MATERIAL_AMOUNT * 0.25)
 	sense_of_taste = FALSE
 	emote_sounds = list(
 		/datum/emote/living/deathgasp::key = 'sound/mobs/non-humanoids/cyborg/borg_deathsound.ogg',

@@ -112,7 +112,7 @@
 	TEST_ASSERT_NULL(culinary.owner, "An organic transformation retained the culinary processor.")
 	TEST_ASSERT_NULL(culinary.flavor_tongue, "An organic transformation retained the processor's tongue reference.")
 
-/// A real bite must spend food, generate flavor and mood, and complete its consume callback exactly once.
+/// A real bite must spend food, generate flavor without mood, and complete its consume callback exactly once.
 /datum/unit_test/ipc_upgrade_culinary_bites
 	var/consume_events = 0
 	var/mob/living/last_feeder
@@ -140,7 +140,7 @@
 	TEST_ASSERT_EQUAL(food.bitecount, 1, "A real IPC bite did not increment the food's bite count.")
 	TEST_ASSERT_EQUAL(donut.reagents.total_volume, 18 - food.bite_consumption, "An IPC bite did not consume exactly one portion of food.")
 	TEST_ASSERT_EQUAL(human.last_taste_time, world.time, "Eating did not generate flavor feedback.")
-	TEST_ASSERT_NOTNULL(human.mob_mood.mood_events["quality_food"], "Eating a liked donut did not generate its food mood event.")
+	TEST_ASSERT_NULL(human.mob_mood.mood_events["quality_food"], "Eating a liked donut gave an IPC a food mood event.")
 	TEST_ASSERT_EQUAL(human.nutrition, 100, "A real food bite charged the IPC battery.")
 	TEST_ASSERT_EQUAL(human.reagents.total_volume, 0, "A real food bite introduced chemicals into the IPC bloodstream.")
 	TEST_ASSERT_EQUAL(culinary.reagents.total_volume, 0, "A real food bite introduced chemicals into the culinary processor.")

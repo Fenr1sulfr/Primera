@@ -6,7 +6,9 @@
 	gloves = /obj/item/clothing/gloves/color/black
 	shoes = /obj/item/clothing/shoes/workboots
 	id_trim = /datum/id_trim/job/explorer
-	ears = /obj/item/radio/headset/headset_cargo
+	// AI EDIT START - Use the right ear slot for existing equipment
+	ear_right = /obj/item/radio/headset/headset_cargo
+	// AI EDIT END
 
 	backpack = /obj/item/storage/backpack/explorer
 	satchel = /obj/item/storage/backpack/satchel/explorer

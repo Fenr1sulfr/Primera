@@ -56,8 +56,14 @@
 	  */
 	var/list/belt_contents = null
 
-	/// Type path of item to go in ears slot
-	var/ears = null
+	// AI EDIT START - Dual ear slots
+	// BANDASTATION EDIT START - Dual ear slots
+	/// Type path of item to go in the right ear slot.
+	var/ear_right = null
+	/// Type path of item to go in the left ear slot.
+	var/ear_left = null
+	// BANDASTATION EDIT END
+	// AI EDIT END
 
 	/// Type path of item to go in the glasses slot
 	var/glasses = null
@@ -195,8 +201,14 @@
 		EQUIP_OUTFIT_ITEM(mask, ITEM_SLOT_MASK)
 	if(neck)
 		EQUIP_OUTFIT_ITEM(neck, ITEM_SLOT_NECK)
-	if(ears)
-		EQUIP_OUTFIT_ITEM(ears, ITEM_SLOT_EARS)
+	// AI EDIT START - Dual ear slots
+	// BANDASTATION EDIT START - Dual ear slots
+	if(ear_right)
+		EQUIP_OUTFIT_ITEM(ear_right, ITEM_SLOT_EAR_RIGHT)
+	if(ear_left)
+		EQUIP_OUTFIT_ITEM(ear_left, ITEM_SLOT_EAR_LEFT)
+	// BANDASTATION EDIT END
+	// AI EDIT END
 	if(glasses)
 		EQUIP_OUTFIT_ITEM(glasses, ITEM_SLOT_EYES)
 	if(back)
@@ -334,8 +346,14 @@
 		user.shoes.add_fingerprint(user, ignoregloves = TRUE)
 	if(user.gloves)
 		user.gloves.add_fingerprint(user, ignoregloves = TRUE)
-	if(user.ears)
-		user.ears.add_fingerprint(user, ignoregloves = TRUE)
+	// AI EDIT START - Dual ear slots
+	// BANDASTATION EDIT START - Dual ear slots
+	if(user.ear_right)
+		user.ear_right.add_fingerprint(user, ignoregloves = TRUE)
+	if(user.ear_left)
+		user.ear_left.add_fingerprint(user, ignoregloves = TRUE)
+	// BANDASTATION EDIT END
+	// AI EDIT END
 	if(user.glasses)
 		user.glasses.add_fingerprint(user, ignoregloves = TRUE)
 	if(user.belt)
@@ -354,7 +372,9 @@
 
 /// Return a list of all the types that are required to disguise as this outfit type
 /datum/outfit/proc/get_chameleon_disguise_info()
-	var/list/types = list(uniform, suit, back, belt, gloves, shoes, head, mask, neck, ears, glasses, id, l_pocket, r_pocket, suit_store, r_hand, l_hand)
+	// AI EDIT START - Dual ear slots
+	var/list/types = list(uniform, suit, back, belt, gloves, shoes, head, mask, neck, ear_right, ear_left, glasses, id, l_pocket, r_pocket, suit_store, r_hand, l_hand) // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	types += chameleon_extras
 	types += skillchips
 	list_clear_nulls(types)
@@ -384,7 +404,12 @@
 		for(var/i in 1 to num_to_load)
 			preload += type_to_load
 	preload += belt
-	preload += ears
+	// AI EDIT START - Dual ear slots
+	// BANDASTATION EDIT START - Dual ear slots
+	preload += ear_right
+	preload += ear_left
+	// BANDASTATION EDIT END
+	// AI EDIT END
 	preload += glasses
 	preload += gloves
 	preload += head
@@ -418,7 +443,12 @@
 	.["head"] = head
 	.["mask"] = mask
 	.["neck"] = neck
-	.["ears"] = ears
+	// AI EDIT START - Dual ear slots
+	// BANDASTATION EDIT START - Dual ear slots
+	.["ear_right"] = ear_right
+	.["ear_left"] = ear_left
+	// BANDASTATION EDIT END
+	// AI EDIT END
 	.["glasses"] = glasses
 	.["id"] = id
 	.["id_trim"] = id_trim
@@ -446,7 +476,12 @@
 	head = target.head
 	mask = target.mask
 	neck = target.neck
-	ears = target.ears
+	// AI EDIT START - Dual ear slots
+	// BANDASTATION EDIT START - Dual ear slots
+	ear_right = target.ear_right
+	ear_left = target.ear_left
+	// BANDASTATION EDIT END
+	// AI EDIT END
 	glasses = target.glasses
 	id = target.id
 	id_trim = target.id_trim
@@ -485,7 +520,12 @@
 	head = text2path(outfit_data["head"])
 	mask = text2path(outfit_data["mask"])
 	neck = text2path(outfit_data["neck"])
-	ears = text2path(outfit_data["ears"])
+	// AI EDIT START - Dual ear slots, preserve legacy outfit uploads
+	// BANDASTATION EDIT START - Dual ear slots, preserve legacy outfit uploads
+	ear_right = text2path(("ear_right" in outfit_data) ? outfit_data["ear_right"] : outfit_data["ears"])
+	ear_left = text2path(outfit_data["ear_left"])
+	// BANDASTATION EDIT END
+	// AI EDIT END
 	glasses = text2path(outfit_data["glasses"])
 	id = text2path(outfit_data["id"])
 	id_trim = text2path(outfit_data["id_trim"])

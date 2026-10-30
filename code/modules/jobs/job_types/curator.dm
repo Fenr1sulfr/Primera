@@ -47,7 +47,9 @@
 		/obj/item/choice_beacon/hero = 1,
 	)
 	belt = /obj/item/modular_computer/pda/crew/curator
-	ears = /obj/item/radio/headset/headset_srvent
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_srvent // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/laceup
 	l_pocket = /obj/item/laser_pointer/green
 	r_pocket = /obj/item/key/displaycase

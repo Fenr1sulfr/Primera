@@ -31,14 +31,25 @@
 
 /datum/design/ipc_head
 	name = "IPC Head"
-	desc = "A replacement IPC head. Sensors and speech hardware are installed separately."
+	desc = "A replacement IPC head with a robotic voicebox. Optical and auditory sensors are installed separately."
 	build_type = MECHFAB
 	build_path = /obj/item/bodypart/head/robot/ipc
-	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 7.5, /datum/material/glass = SHEET_MATERIAL_AMOUNT * 2.5)
+	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 8, /datum/material/glass = SHEET_MATERIAL_AMOUNT * 2.75)
+	transfered_materials = list(
+		/obj/item/bodypart/head/robot/ipc = /obj/item/bodypart/head/robot/ipc::custom_materials,
+		/obj/item/organ/tongue/robot/ipc = /obj/item/organ/tongue/robot/ipc::custom_materials,
+	)
 	construction_time = 35 SECONDS
 	category = list(RND_CATEGORY_MECHFAB_CYBORG + RND_SUBCATEGORY_MECHFAB_CYBORG_CHASSIS)
 	research_icon = 'modular_bandastation/species/icons/ipc/morpheus.dmi'
 	research_icon_state = "ipc_head"
+
+/// Manufactured heads include speech hardware without duplicating organs during species regeneration.
+/datum/design/ipc_head/create_result(atom/drop_loc, list/custom_materials, amount)
+	var/obj/item/bodypart/head/robot/ipc/head = ..()
+	var/obj/item/organ/tongue/robot/ipc/voicebox = new(head)
+	voicebox.bodypart_insert(head)
+	return head
 
 /datum/design/ipc_chassis
 	name = "IPC Chassis"
@@ -66,6 +77,15 @@
 	build_path = /obj/item/organ/cyberimp/arm/power_cord/ipc
 	materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT, /datum/material/glass = SHEET_MATERIAL_AMOUNT * 0.5)
 	construction_time = 20 SECONDS
+	category = list(RND_CATEGORY_MECHFAB_CYBORG + RND_SUBCATEGORY_MECHFAB_CYBORG_COMPONENTS)
+
+/datum/design/ipc_voicebox
+	name = "IPC Voicebox"
+	desc = "A replacement voice synthesizer for IPC speech and machine emotes."
+	build_type = MECHFAB
+	build_path = /obj/item/organ/tongue/robot/ipc
+	materials = list(/datum/material/iron = HALF_SHEET_MATERIAL_AMOUNT, /datum/material/glass = SHEET_MATERIAL_AMOUNT * 0.25)
+	construction_time = 10 SECONDS
 	category = list(RND_CATEGORY_MECHFAB_CYBORG + RND_SUBCATEGORY_MECHFAB_CYBORG_COMPONENTS)
 
 /datum/design/ipc_nanopaste

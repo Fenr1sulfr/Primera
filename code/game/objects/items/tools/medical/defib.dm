@@ -123,6 +123,17 @@
 
 //ATTACK HAND IGNORING PARENT RETURN VALUE
 /obj/item/defibrillator/attack_hand(mob/user, list/modifiers)
+	// AI EDIT START - Allow floor use within paddle cable range
+	// BANDASTATION ADDITION START - Floor defibrillator use
+	if(isturf(loc))
+		if(!in_range(src, user))
+			balloon_alert(user, "too far away!")
+			return
+		add_fingerprint(user)
+		ui_action_click(user, modifiers)
+		return
+	// BANDASTATION ADDITION END
+	// AI EDIT END
 	if(loc == user)
 		if(user.get_slot_by_item(src) & slot_flags)
 			ui_action_click(user, modifiers)

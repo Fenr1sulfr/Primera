@@ -4,7 +4,9 @@
 	id = /obj/item/card/id/advanced
 	id_trim = /datum/id_trim/vr
 	uniform = /obj/item/clothing/under/color/random
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/sneakers/black
 
 /datum/outfit/vr/pre_equip(mob/living/carbon/human/H)

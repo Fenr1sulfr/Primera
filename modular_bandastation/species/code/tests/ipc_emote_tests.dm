@@ -39,6 +39,31 @@
 	emotes_used++
 	last_emote = emote
 
+/// A transplanted organic brain uses the receiving chassis' voicebox and emotion controls.
+/datum/unit_test/ipc_emote_brain_transplant/Run()
+	var/mob/living/carbon/human/donor = allocate(/mob/living/carbon/human/consistent)
+	donor.mind_initialize()
+	var/datum/mind/personality = donor.mind
+	var/obj/item/organ/brain/brain = donor.get_organ_slot(ORGAN_SLOT_BRAIN)
+	allocated += brain
+	brain.Remove(donor)
+	TEST_ASSERT_EQUAL(brain.brainmob?.mind, personality, "Removing the donor brain did not preserve its personality.")
+	var/mob/living/carbon/human/ipc = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left, /datum/species/ipc)
+	TEST_ASSERT(brain.Insert(ipc, special = TRUE, movement_flags = DELETE_IF_REPLACED), "The organic brain could not be transplanted into the IPC fixture.")
+	TEST_ASSERT_EQUAL(ipc.mind, personality, "The organic brain did not transfer its personality to the IPC.")
+	TEST_ASSERT(is_species(ipc, /datum/species/ipc), "An organic brain replaced the chassis' species.")
+	TEST_ASSERT(HAS_TRAIT(ipc, TRAIT_SILICON_EMOTES_ALLOWED), "An organic brain removed the chassis' voicebox capability.")
+	TEST_ASSERT(/mob/living/carbon/human/proc/open_ipc_emote_panel in ipc.verbs, "The organic brain transplant lost the IPC emotion panel verb.")
+	var/datum/emote_panel/panel = allocate(/datum/emote_panel)
+	var/list/panel_data = panel.ui_static_data(ipc)
+	var/list/panel_keys = list()
+	for(var/list/emote_data as anything in panel_data["emotes"])
+		panel_keys += emote_data["key"]
+	for(var/emote_key in list("beep", "ping", "buzz", "yes", "no", "scream"))
+		TEST_ASSERT(emote_key in panel_keys, "The emotion panel hid a transplanted brain's machine emotion: [emote_key].")
+		TEST_ASSERT_NOTNULL(get_available_emote(ipc, emote_key, status_check = TRUE), "An organic brain prevented the IPC from using its machine emotion: [emote_key].")
+	TEST_ASSERT(ipc.emote("beep", intentional = TRUE), "The transplanted human personality could not beep through its IPC voicebox.")
+
 /// Organic reactions are rejected even by forced dispatch, while gestures and freeform roleplay remain available.
 /datum/unit_test/ipc_emote_restrictions/Run()
 	var/mob/living/carbon/human/ipc = allocate(/mob/living/carbon/human/consistent)

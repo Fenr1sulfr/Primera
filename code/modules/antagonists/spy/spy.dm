@@ -210,7 +210,9 @@
 	head = /obj/item/clothing/head/fedora
 	suit = /obj/item/clothing/suit/jacket/leather_trenchcoat
 	glasses = /obj/item/clothing/glasses/osi
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 
 /datum/action/backup_uplink
 	name = "Create Uplink"

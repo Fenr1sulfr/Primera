@@ -3,7 +3,7 @@
 	var/datum/techweb_node/augmentation/node = SSresearch.techweb_nodes[/datum/techweb_node/augmentation]
 	var/obj/machinery/mecha_part_fabricator/fabricator = allocate(/obj/machinery/mecha_part_fabricator)
 	fabricator.drop_direction = NONE
-	var/list/design_paths = list(/datum/design/ipc_head, /datum/design/ipc_chassis, /datum/design/ipc_microbattery, /datum/design/ipc_power_cord, /datum/design/ipc_nanopaste)
+	var/list/design_paths = list(/datum/design/ipc_head, /datum/design/ipc_chassis, /datum/design/ipc_microbattery, /datum/design/ipc_power_cord, /datum/design/ipc_voicebox, /datum/design/ipc_nanopaste)
 	for(var/design_path in design_paths)
 		var/datum/design/design = SSresearch.techweb_designs[design_path]
 		TEST_ASSERT_NOTNULL(design, "IPC replacement design [design_path] was not registered.")
@@ -13,6 +13,23 @@
 		var/atom/movable/part = locate(design.build_path) in get_turf(fabricator)
 		TEST_ASSERT_NOTNULL(part, "The fabricator produced no [design.build_path].")
 		allocated += part
+
+	var/obj/item/bodypart/head/robot/ipc/head = locate() in get_turf(fabricator)
+	var/obj/item/organ/tongue/robot/ipc/bundled_voicebox = locate() in head
+	TEST_ASSERT_NOTNULL(bundled_voicebox, "The printed IPC head has no voicebox.")
+	TEST_ASSERT_EQUAL(bundled_voicebox.bodypart_owner, head, "The printed voicebox was not physically installed in its head.")
+	TEST_ASSERT_NULL(bundled_voicebox.owner, "A detached printed voicebox acquired a mob owner.")
+	TEST_ASSERT_EQUAL(length(head.contents), 1, "The printed head contains duplicate speech hardware or unpriced organs.")
+	var/datum/design/head_design = SSresearch.techweb_designs[/datum/design/ipc_head]
+	for(var/datum/material/material as anything in head_design.materials)
+		TEST_ASSERT_EQUAL(head.custom_materials[material] + bundled_voicebox.custom_materials[material], head_design.materials[material], "The printed head and voicebox did not account for their fabrication materials.")
+
+	var/obj/item/organ/tongue/robot/ipc/voicebox = locate() in get_turf(fabricator)
+	TEST_ASSERT_NOTNULL(voicebox, "Robotics did not dispense a standalone replacement voicebox.")
+	var/mob/living/carbon/human/ipc = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left, /datum/species/ipc)
+	TEST_ASSERT(voicebox.Insert(ipc, special = TRUE, movement_flags = DELETE_IF_REPLACED), "A fabricated voicebox could not replace an IPC's speech hardware.")
+	TEST_ASSERT(HAS_TRAIT(ipc, TRAIT_SILICON_EMOTES_ALLOWED), "A replacement voicebox did not enable machine emotes.")
+	TEST_ASSERT(ipc.emote("beep", intentional = TRUE), "A fabricated replacement voicebox could not beep.")
 
 	var/obj/item/stack/nanopaste/paste = locate() in get_turf(fabricator)
 	TEST_ASSERT_NOTNULL(paste, "Robotics did not dispense nanopaste.")
@@ -79,6 +96,13 @@
 		TEST_ASSERT(perform_assembly_step(/datum/surgery_operation/limb/prosthetic_replacement, chassis, surgeon, part, part.body_zone), "Normal prosthetic surgery could not attach [part.body_zone].")
 		TEST_ASSERT_EQUAL(chassis.get_bodypart(part.body_zone), part, "Surgery did not attach its supplied [part.body_zone].")
 	TEST_ASSERT_EQUAL(length(chassis.get_bodyparts()), 6, "The printed chassis could not receive all six body parts.")
+	var/obj/item/organ/tongue/robot/ipc/voicebox = chassis.get_organ_slot(ORGAN_SLOT_TONGUE)
+	TEST_ASSERT_NOTNULL(voicebox, "Attaching the printed head did not install its bundled voicebox.")
+	TEST_ASSERT(HAS_TRAIT(chassis, TRAIT_SILICON_EMOTES_ALLOWED), "Attaching the printed head did not enable machine emotes.")
+	var/voicebox_count = 0
+	for(var/obj/item/organ/tongue/tongue in chassis.organs)
+		voicebox_count++
+	TEST_ASSERT_EQUAL(voicebox_count, 1, "Attaching the printed head installed duplicate speech hardware.")
 
 	TEST_ASSERT(perform_assembly_step(/datum/surgery_operation/limb/mechanical_incision, chassis, surgeon, screwdriver, BODY_ZONE_CHEST), "Could not unscrew the empty chassis.")
 	TEST_ASSERT(perform_assembly_step(/datum/surgery_operation/limb/mechanical_open, chassis, surgeon, IMPLEMENT_HAND, BODY_ZONE_CHEST), "Could not open the empty chassis.")
@@ -107,6 +131,40 @@
 	TEST_ASSERT(species.try_restart(chassis), "A repaired, charged chassis with an existing core could not boot.")
 	TEST_ASSERT_NOTEQUAL(chassis.stat, DEAD, "The assembled chassis remained dead after rebooting.")
 	TEST_ASSERT_EQUAL(personality.current, chassis, "The original personality did not retain control after booting.")
+	TEST_ASSERT(chassis.emote("beep", intentional = TRUE), "The assembled positronic personality could not use its printed voicebox.")
+
+/// A human brain transplanted into a printed chassis must retain the printed head's machine controls.
+/datum/unit_test/ipc_fabricated_chassis_assembly/organic_brain/Run()
+	..()
+	var/mob/living/carbon/human/species/ipc_chassis/chassis = locate() in run_loc_floor_bottom_left
+	TEST_ASSERT_NOTNULL(chassis, "The assembly fixture left no printed chassis for an organic brain.")
+	var/obj/item/organ/brain/ipc/core = chassis.get_organ_slot(ORGAN_SLOT_BRAIN)
+	core.Remove(chassis)
+	var/mob/living/carbon/human/donor = allocate(/mob/living/carbon/human/consistent)
+	donor.mind_initialize()
+	var/datum/mind/personality = donor.mind
+	var/obj/item/organ/brain/brain = donor.get_organ_slot(ORGAN_SLOT_BRAIN)
+	allocated += brain
+	brain.Remove(donor)
+	var/mob/living/carbon/human/surgeon = allocate(/mob/living/carbon/human/consistent)
+	surgeon.put_in_active_hand(brain)
+	surgeon.zone_selected = BODY_ZONE_HEAD
+	brain.attack(chassis, surgeon)
+	TEST_ASSERT_EQUAL(chassis.get_organ_slot(ORGAN_SLOT_BRAIN), brain, "Direct transplantation did not insert the organic brain into the printed chassis.")
+	TEST_ASSERT_EQUAL(chassis.mind, personality, "The printed chassis lost its human donor's personality.")
+	var/datum/species/ipc/species = chassis.dna.species
+	TEST_ASSERT(istype(species) && species.try_restart(chassis), "The printed chassis could not boot with an organic brain.")
+	TEST_ASSERT_NOTEQUAL(chassis.stat, DEAD, "The printed chassis remained dead after receiving its organic brain.")
+	TEST_ASSERT(HAS_TRAIT(chassis, TRAIT_SILICON_EMOTES_ALLOWED), "The organic brain transplant disabled the printed voicebox.")
+	TEST_ASSERT(/mob/living/carbon/human/proc/open_ipc_emote_panel in chassis.verbs, "The printed chassis lost its machine emotion controls.")
+	var/datum/emote_panel/panel = allocate(/datum/emote_panel)
+	var/list/panel_data = panel.ui_static_data(chassis)
+	var/list/panel_keys = list()
+	for(var/list/emote_data as anything in panel_data["emotes"])
+		panel_keys += emote_data["key"]
+	for(var/emote_key in list("beep", "ping", "buzz", "yes", "no", "scream"))
+		TEST_ASSERT(emote_key in panel_keys, "The printed chassis hid a human donor's machine emotion: [emote_key].")
+	TEST_ASSERT(chassis.emote("ping", intentional = TRUE), "A transplanted human brain could not use the printed voicebox.")
 
 /// Resolve the player's real surgical target and use normal tool holding, checks, delay and completion.
 /datum/unit_test/ipc_fabricated_chassis_assembly/proc/perform_assembly_step(operation_path, mob/living/carbon/human/patient, mob/living/carbon/human/surgeon, tool, zone, list/operation_args)

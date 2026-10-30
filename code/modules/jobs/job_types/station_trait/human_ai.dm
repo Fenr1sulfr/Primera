@@ -103,7 +103,9 @@
 
 	uniform = /obj/item/clothing/under/rank/station_trait/human_ai
 	belt = /obj/item/modular_computer/pda/human_ai
-	ears = /obj/item/radio/headset/silicon/human_ai
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/silicon/human_ai // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/diagnostic
 
 	l_pocket = /obj/item/laser_pointer/infinite_range //to punish borgs, this works through the camera console.

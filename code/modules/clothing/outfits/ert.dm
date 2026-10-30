@@ -11,7 +11,9 @@
 	name = "ERT Common"
 
 	uniform = /obj/item/clothing/under/rank/centcom/officer
-	ears = /obj/item/radio/headset/headset_cent/alt
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cent/alt // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	gloves = /obj/item/clothing/gloves/combat
 	mask = /obj/item/clothing/mask/gas/sechailer
 	shoes = /obj/item/clothing/shoes/combat/swat
@@ -21,7 +23,9 @@
 	if(visuals_only)
 		return
 
-	var/obj/item/radio/headset/R = H.ears
+	// AI EDIT START - Support independent left and right ear slots
+	var/obj/item/radio/headset/R = H.ear_right // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	R.set_frequency(FREQ_CENTCOM)
 	R.freqlock = RADIO_FREQENCY_LOCKED
 	if(additional_radio)
@@ -46,7 +50,9 @@
 		/obj/item/melee/baton/security/loaded = 1,
 	)
 	belt = /obj/item/storage/belt/security/full
-	ears = /obj/item/radio/headset/headset_cent/alt/leader
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cent/alt/leader // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/security/sunglasses
 	l_pocket = /obj/item/switchblade
 	additional_radio = /obj/item/encryptionkey/heads/captain
@@ -163,7 +169,9 @@
 		/obj/item/stamp/centcom = 1,
 	)
 	belt = /obj/item/gun/energy/e_gun
-	ears = /obj/item/radio/headset/headset_cent
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cent // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/sunglasses
 	gloves = /obj/item/clothing/gloves/color/black
 	shoes = /obj/item/clothing/shoes/sneakers/black
@@ -264,7 +272,9 @@
 		/obj/item/melee/baton/security/loaded = 1,
 		/obj/item/storage/box/lights/mixed = 1,
 	)
-	ears = /obj/item/radio/headset/headset_cent/alt/leader
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cent/alt/leader // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	r_hand = /obj/item/reagent_containers/spray/chemsprayer/janitor
 
 /datum/outfit/centcom/ert/clown
@@ -302,7 +312,9 @@
 	back = /obj/item/storage/backpack/satchel
 	box = /obj/item/storage/box/survival
 	belt = /obj/item/melee/baton
-	ears = /obj/item/radio/headset/headset_cent
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cent // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/sunglasses
 	gloves = /obj/item/clothing/gloves/color/black
 	shoes = /obj/item/clothing/shoes/sneakers/black
@@ -443,7 +455,9 @@
 		/obj/item/storage/medkit/regular = 1,
 	)
 	belt = /obj/item/gun/ballistic/revolver/mateba
-	ears = /obj/item/radio/headset/headset_cent/alt
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cent/alt // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	gloves = /obj/item/clothing/gloves/tackler/combat/insulated
 	mask = /obj/item/clothing/mask/gas/sechailer/swat
 	shoes = /obj/item/clothing/shoes/combat/swat
@@ -462,7 +476,9 @@
 	if(visuals_only)
 		return
 
-	var/obj/item/radio/radio = squaddie.ears
+	// AI EDIT START - Support independent left and right ear slots
+	var/obj/item/radio/radio = squaddie.ear_right // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	radio.set_frequency(FREQ_CENTCOM)
 	radio.freqlock = RADIO_FREQENCY_LOCKED
 	var/obj/item/card/id/id = squaddie.wear_id
@@ -475,7 +491,9 @@
 	name = "Death Commando Officer"
 
 	back = /obj/item/mod/control/pre_equipped/apocryphal/officer
-	ears = /obj/item/radio/headset/headset_cent/alt/leader
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cent/alt/leader // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 
 /datum/outfit/centcom/death_commando/officer/post_equip(mob/living/carbon/human/squaddie, visuals_only = FALSE)
 	. = ..()
@@ -496,7 +514,9 @@
 	suit_store = /obj/item/gun/ballistic/automatic/wt550
 	back = /obj/item/shield/riot
 	belt = /obj/item/storage/belt/military/assault/full
-	ears = /obj/item/radio/headset/headset_cent/alt/leader
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cent/alt/leader // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/security/sunglasses/eyepatch
 	l_pocket = /obj/item/knife/combat
 	r_pocket = /obj/item/tank/internals/emergency_oxygen/double
@@ -510,7 +530,9 @@
 
 	id = /obj/item/card/id/advanced/centcom/ert/security
 	suit = /obj/item/clothing/suit/armor/vest/marine/security
-	ears = /obj/item/radio/headset/headset_cent/alt
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cent/alt // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/security/sunglasses
 	head = /obj/item/clothing/head/helmet/marine/security
 	additional_radio = /obj/item/encryptionkey/heads/hos
@@ -530,7 +552,9 @@
 		/obj/item/storage/medkit/advanced = 1,
 	)
 	belt = /obj/item/storage/belt/medical/paramedic
-	ears = /obj/item/radio/headset/headset_cent/alt
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cent/alt // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/health/sunglasses
 	additional_radio = /obj/item/encryptionkey/heads/cmo
 
@@ -546,7 +570,9 @@
 	back = /obj/item/deployable_turret_folded
 	uniform = /obj/item/clothing/under/rank/centcom/military/eng
 	belt = /obj/item/storage/belt/utility/full/powertools/rcd
-	ears = /obj/item/radio/headset/headset_cent/alt
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cent/alt // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/diagnostic/sunglasses
 	additional_radio = /obj/item/encryptionkey/heads/ce
 
@@ -567,7 +593,9 @@
 	box = /obj/item/storage/box/survival
 	l_pocket = /obj/item/switchblade
 	r_pocket = /obj/item/reagent_containers/hypospray/medipen/salacid
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	backpack_contents = list(
 		/obj/item/storage/medkit/emergency = 1,
 		/obj/item/crowbar = 1,
@@ -598,7 +626,9 @@
 		/obj/item/stack/medical/poultice = 1, //These stacks contain 15 by default. Great for getting corpses to defib range without surgery.
 	)
 	belt = /obj/item/storage/belt/medical/ert
-	ears = /obj/item/radio/headset/headset_cent/alt
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cent/alt // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/hud/health/sunglasses
 	additional_radio = /obj/item/encryptionkey/heads/cmo
 	mask = /obj/item/clothing/mask/surgical

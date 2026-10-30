@@ -26,7 +26,9 @@
 	belt = /obj/item/modular_computer/pda/chameleon
 	mask = /obj/item/cigarette/syndicate
 	shoes = /obj/item/clothing/shoes/chameleon/noslip
-	ears = /obj/item/radio/headset/chameleon
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/chameleon // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	id = /obj/item/card/id/advanced/chameleon
 	r_hand = /obj/item/storage/toolbox/syndicate
 	id_trim = /datum/id_trim/chameleon/operative

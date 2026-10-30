@@ -61,6 +61,7 @@
 
 	///List of all networks that can see this camera through the security console.
 	var/list/network = list(CAMERANET_NETWORK_SS13)
+	var/list/pre_emp_network
 	///The tag the camera has, which is essentially its name to security camera consoles.
 	var/c_tag = null
 	///Boolean on whether the camera is activated, so can be seen on camera consoles or will just be static.
@@ -233,6 +234,8 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 		return
 	if(!prob(150 / severity))
 		return
+	if(!emped)
+		pre_emp_network = network.Copy()
 	network = list()
 	SScameras.remove_camera_from_chunk(src)
 	set_machine_stat(machine_stat | EMPED)
@@ -240,7 +243,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 	emped++ //Increase the number of consecutive EMP's
 	update_appearance()
 	calculate_active_power()
-	addtimer(CALLBACK(src, PROC_REF(post_emp_reset), emped, network), reset_time)
+	addtimer(CALLBACK(src, PROC_REF(post_emp_reset), emped, pre_emp_network), reset_time)
 	for(var/mob/M as anything in GLOB.player_list)
 		if (M.client?.eye == src)
 			M.reset_perspective(null)
@@ -259,6 +262,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 	if(emped != thisemp) //Only fix it if the camera hasn't been EMP'd again
 		return
 	network = previous_network
+	pre_emp_network = null
 	set_machine_stat(machine_stat & ~EMPED)
 	update_appearance()
 	if(can_use())

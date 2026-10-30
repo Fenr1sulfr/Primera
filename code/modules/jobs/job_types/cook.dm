@@ -75,7 +75,9 @@
 		/obj/item/sharpener = 1,
 	)
 	belt = /obj/item/modular_computer/pda/crew/cook
-	ears = /obj/item/radio/headset/headset_srv
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_srv // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	head = /obj/item/clothing/head/utility/chefhat
 	mask = /obj/item/clothing/mask/fakemoustache/italian
 	r_pocket = /obj/item/cooking_voucher

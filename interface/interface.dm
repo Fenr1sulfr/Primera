@@ -54,45 +54,10 @@ GAME_VERB_HIDDEN(/client, config, "config")
 		return
 	DIRECT_OUTPUT(src, link(configurl))
 
-GAME_VERB_DESC(/client, reportissue, "report-issue", "Report an issue", null)
-
-	var/githuburl = CONFIG_GET(string/githuburl)
-	if(!githuburl)
-		to_chat(src, span_danger("The Github URL is not set in the server configuration."))
-		return
-
-	var/testmerge_data = GLOB.revdata.testmerge
-	var/has_testmerge_data = (length(testmerge_data) != 0)
-
-	var/message = "Нашли баг? Сообщите о нём нам! Это откроет вам страницу создания Issue на Github, открыть?"
-	if(has_testmerge_data)
-		message += "\n Следующие экспериментальные изменения активны и возможно причина вашей проблемы. В таком случае, постарайтесь не плодить ишуи, и попробуйте найти существующую, где вы можете оставить больше деталей: \n"
-		message += GLOB.revdata.GetTestMergeInfo(FALSE)
-
-	if(tgui_alert(usr, message, "Сообщить о баге", list("Ладно", "Миссклик...")) != "Ладно")
-		return
-
-	var/base_link = githuburl + "/issues/new?template=bug_report_form.yml"
-	var/list/concatable = list(base_link)
-
-	var/client_version = "[byond_version].[byond_build]"
-	concatable += ("&reporting-version=" + client_version)
-
-	// the way it works is that we use the ID's that are baked into the template YML and replace them with values that we can collect in game.
-	if(GLOB.round_id)
-		concatable += ("&round-id=" + GLOB.round_id)
-
-	// Insert testmerges
-	if(has_testmerge_data)
-		var/list/all_tms = list()
-		for(var/entry in testmerge_data)
-			var/datum/tgs_revision_information/test_merge/tm = entry
-			all_tms += "- \[[tm.title]\]([githuburl]/pull/[tm.number])"
-		var/all_tms_joined = jointext(all_tms, "\n")
-
-		concatable += ("&test-merges=" + url_encode(all_tms_joined))
-
-	DIRECT_OUTPUT(src, link(jointext(concatable, "")))
+// BANDASTATION EDIT START - replace external issue form with in-game bug reports
+GAME_VERB_DESC(/client, reportissue, "report-issue", "Report an issue", "OOC")
+	open_bug_report()
+// BANDASTATION EDIT END - in-game bug reports
 
 GAME_VERB(/client, changelog, "Changelog", "OOC")
 

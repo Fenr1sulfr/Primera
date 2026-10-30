@@ -338,7 +338,9 @@
 
 	uniform = /obj/item/clothing/under/color/grey
 	id = /obj/item/card/id/advanced
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	belt = /obj/item/modular_computer/pda/crew
 	back = /obj/item/storage/backpack
 	shoes = /obj/item/clothing/shoes/sneakers/black

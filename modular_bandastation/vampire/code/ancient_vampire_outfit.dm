@@ -7,7 +7,9 @@
 	back = /obj/item/storage/backpack
 	gloves = /obj/item/clothing/gloves/combat
 	shoes = /obj/item/clothing/shoes/chameleon/noslip
-	ears = /obj/item/radio/headset/syndicate
+	// AI EDIT START - Support independent ear inventory slots
+	ear_right = /obj/item/radio/headset/syndicate
+	// AI EDIT END
 	id = /obj/item/card/id/advanced/debug
 	backpack_contents = list(
 		/obj/item/storage/box/survival = 1,

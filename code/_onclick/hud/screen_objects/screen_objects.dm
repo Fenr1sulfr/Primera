@@ -197,6 +197,10 @@ INITIALIZE_IMMEDIATE(/atom/movable/screen) // I hate this place
 	var/icon_full
 	/// The overlay when hovering over with an item in your hand
 	var/image/object_overlay
+	// AI EDIT START - Separate appearance for a reserved clothing slot.
+	/// BANDASTATION ADDITION - Separate appearance for a reserved clothing slot.
+	var/mutable_appearance/occupied_slot_overlay
+	// AI EDIT END
 
 /atom/movable/screen/inventory/Click(location, control, params)
 	// At this point in client Click() code we have passed the 1/10 sec check and little else

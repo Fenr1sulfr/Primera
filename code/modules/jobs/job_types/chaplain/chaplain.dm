@@ -125,7 +125,9 @@
 		/obj/item/stamp/chap = 1,
 		)
 	belt = /obj/item/modular_computer/pda/crew/chaplain
-	ears = /obj/item/radio/headset/headset_srv
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_srv // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 
 	backpack = /obj/item/storage/backpack/cultpack
 	satchel = /obj/item/storage/backpack/cultpack

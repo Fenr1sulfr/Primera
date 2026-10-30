@@ -155,6 +155,11 @@
 		item_target.righthand_file = picked_item::righthand_file
 
 		item_target.worn_icon_state = picked_item::worn_icon_state
+		// AI EDIT START - Copy slot-specific worn states with the chosen disguise
+		// BANDASTATION ADDITION START - Slot-specific worn states
+		item_target.worn_icon_state_by_slot = copy_initial_worn_icon_states(picked_item)
+		// BANDASTATION ADDITION END
+		// AI EDIT END
 		item_target.inhand_icon_state = picked_item::inhand_icon_state
 
 		if(picked_item::greyscale_colors)

@@ -55,6 +55,7 @@
 
 /datum/species/ipc/on_species_gain(mob/living/carbon/human/human, datum/species/old_species, pref_load, regenerate_icons = TRUE, replace_missing = TRUE)
 	. = ..()
+	human.mob_mood?.set_enabled(FALSE)
 	human.hud_used?.remove_screen_object(HUD_MOB_HUNGER)
 	for(var/hud_type in list(DATA_HUD_MEDICAL_BASIC, DATA_HUD_MEDICAL_ADVANCED))
 		var/datum/atom_hud/medical_hud = GLOB.huds[hud_type]
@@ -100,6 +101,8 @@
 
 /datum/species/ipc/on_species_loss(mob/living/carbon/human/human, datum/species/new_species, pref_load)
 	. = ..()
+	if(!istype(new_species, /datum/species/ipc))
+		human.mob_mood?.set_enabled(TRUE)
 	QDEL_NULL(display_action)
 	restore_emote_verbs(human)
 	if(human.hud_used && !istype(new_species, /datum/species/ipc) && !human.hud_used.screen_objects[HUD_MOB_HUNGER])

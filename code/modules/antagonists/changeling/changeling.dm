@@ -92,7 +92,12 @@
 		"belt" = /obj/item/changeling,
 		"gloves" = /obj/item/clothing/gloves/changeling,
 		"glasses" = /obj/item/clothing/glasses/changeling,
-		"ears" = /obj/item/changeling,
+		// AI EDIT START - Dual ear slots
+		// BANDASTATION EDIT START - Dual ear slots
+		"ear_right" = /obj/item/changeling,
+		"ear_left" = /obj/item/changeling,
+		// BANDASTATION EDIT END
+		// AI EDIT END
 		"wear_id" = /obj/item/changeling/id,
 		"s_store" = /obj/item/changeling,
 	)
@@ -571,7 +576,9 @@
 	new_profile.id_icon = target.wear_id?.get_sechud_job_icon()
 	new_profile.id_icon_state = target.wear_id?.get_sechud_job_icon_state()
 
-	var/list/slots = list("head", "wear_mask", "wear_neck", "back", "wear_suit", "w_uniform", "shoes", "belt", "gloves", "glasses", "ears", "wear_id", "s_store")
+	// AI EDIT START - Support independent left and right ear slots
+	var/list/slots = list("head", "wear_mask", "wear_neck", "back", "wear_suit", "w_uniform", "shoes", "belt", "gloves", "glasses", "ear_right", "ear_left", "wear_id", "s_store") // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	for(var/slot in slots)
 		if(!(slot in target.vars))
 			continue
@@ -586,6 +593,9 @@
 		new_profile.inhand_icon_state_list[slot] = clothing_item.inhand_icon_state
 		new_profile.worn_icon_list[slot] = clothing_item.worn_icon
 		new_profile.worn_icon_state_list[slot] = clothing_item.worn_icon_state
+		// AI EDIT START - Snapshot each garment's slot-specific worn states independently
+		new_profile.worn_icon_state_by_slot_list[slot] = clothing_item.worn_icon_state_by_slot?.Copy() // BANDASTATION ADDITION - Slot-specific worn states
+		// AI EDIT END
 		new_profile.exists_list[slot] = 1
 
 	new_profile.voice = target.voice
@@ -765,7 +775,12 @@
 		"belt" = ITEM_SLOT_BELT,
 		"gloves" = ITEM_SLOT_GLOVES,
 		"glasses" = ITEM_SLOT_EYES,
-		"ears" = ITEM_SLOT_EARS,
+		// AI EDIT START - Dual ear slots
+		// BANDASTATION EDIT START - Dual ear slots
+		"ear_right" = ITEM_SLOT_EAR_RIGHT,
+		"ear_left" = ITEM_SLOT_EAR_LEFT,
+		// BANDASTATION EDIT END
+		// AI EDIT END
 		"wear_id" = ITEM_SLOT_ID,
 		"s_store" = ITEM_SLOT_SUITSTORE,
 	)
@@ -859,6 +874,10 @@
 		new_flesh_item.inhand_icon_state = chosen_profile.inhand_icon_state_list[slot]
 		new_flesh_item.worn_icon = chosen_profile.worn_icon_list[slot]
 		new_flesh_item.worn_icon_state = chosen_profile.worn_icon_state_list[slot]
+		// AI EDIT START - Restore slot-specific worn states without sharing the saved profile list
+		var/alist/slot_states = chosen_profile.worn_icon_state_by_slot_list[slot]
+		new_flesh_item.worn_icon_state_by_slot = slot_states?.Copy() // BANDASTATION ADDITION - Slot-specific worn states
+		// AI EDIT END
 
 		if(istype(new_flesh_item, /obj/item/changeling/id) && chosen_profile.id_icon)
 			var/obj/item/changeling/id/flesh_id = new_flesh_item
@@ -905,6 +924,12 @@
 	var/list/worn_icon_list = list()
 	/// Assoc list of item slot to string - stores the worn icon state of the item in that slot
 	var/list/worn_icon_state_list = list()
+	// AI EDIT START - Preserve slot-specific garment states in changeling profiles
+	// BANDASTATION ADDITION START - Slot-specific worn states
+	/// Assoc list of inventory field names to each garment's slot-specific worn-state map.
+	var/list/worn_icon_state_by_slot_list = list()
+	// BANDASTATION ADDITION END
+	// AI EDIT END
 	/// The underwear worn by the profile source
 	var/underwear
 	/// The colour of the underwear worn by the profile source
@@ -964,6 +989,14 @@
 	new_profile.socks = socks
 	new_profile.worn_icon_list = worn_icon_list.Copy()
 	new_profile.worn_icon_state_list = worn_icon_state_list.Copy()
+	// AI EDIT START - Keep nested worn-state maps independent when duplicating profiles
+	// BANDASTATION ADDITION START - Slot-specific worn states
+	new_profile.worn_icon_state_by_slot_list = list()
+	for(var/slot in worn_icon_state_by_slot_list)
+		var/alist/slot_states = worn_icon_state_by_slot_list[slot]
+		new_profile.worn_icon_state_by_slot_list[slot] = slot_states?.Copy()
+	// BANDASTATION ADDITION END
+	// AI EDIT END
 	new_profile.skillchips = skillchips.Copy()
 	new_profile.stored_scars = stored_scars.Copy()
 	new_profile.profile_snapshot = profile_snapshot

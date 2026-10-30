@@ -61,7 +61,7 @@ GLOBAL_DATUM_INIT(help_ui_handler, /datum/help_ui_handler, new)
 
 	switch(action)
 		if("create_ticket")
-			var/ticket_message = sanitize(trim(params["message"], MAX_MESSAGE_LEN))
+			var/ticket_message = trim(params["message"], MAX_MESSAGE_LEN)
 			if(!ticket_message)
 				return FALSE
 

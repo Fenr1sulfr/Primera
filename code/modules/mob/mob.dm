@@ -53,6 +53,7 @@
 
 	if(mock_client)
 		mock_client.mob = null
+		mock_client = null // BANDASTATION ADDITION - Release the mock client even if this mob is still referenced during GC
 
 	return ..()
 

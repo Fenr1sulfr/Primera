@@ -2,13 +2,15 @@
 /obj/vehicle/sealed/spacepod/proc/needs_cabin_air_exchange(datum/gas_mixture/tank_air)
 	if(QDELETED(cabin_air) || cabin_air.volume <= 0 || cabin_air.temperature <= 0 || QDELETED(tank_air) || tank_air.volume <= 0 || tank_air.temperature <= 0)
 		return FALSE
+	var/cabin_oxygen = cabin_air.moles[/datum/gas/oxygen]
+	var/oxygen_pressure = cabin_oxygen * R_IDEAL_GAS_EQUATION * cabin_air.temperature / cabin_air.volume
+	if(oxygen_pressure >= SPACEPOD_CABIN_OXYGEN_TARGET)
+		return FALSE
 	var/cabin_moles = cabin_air.total_moles()
 	var/tank_moles = tank_air.total_moles()
 	if(cabin_moles <= 0 || tank_moles <= 0)
 		return FALSE
-	var/cabin_oxygen = cabin_air.moles[/datum/gas/oxygen]
-	var/oxygen_pressure = cabin_oxygen * R_IDEAL_GAS_EQUATION * cabin_air.temperature / cabin_air.volume
-	return oxygen_pressure < SPACEPOD_CABIN_OXYGEN_TARGET && tank_air.moles[/datum/gas/oxygen] / tank_moles > cabin_oxygen / cabin_moles
+	return tank_air.moles[/datum/gas/oxygen] / tank_moles > cabin_oxygen / cabin_moles
 
 /obj/vehicle/sealed/spacepod/proc/process_life_support(seconds_per_tick)
 	if(seconds_per_tick <= 0 || !isturf(loc) || !use_internal_tank || melting_down || !COOLDOWN_FINISHED(src, cooldown_emp) || QDELETED(cabin_air) || cabin_air.volume <= 0 || cabin_air.temperature <= 0)

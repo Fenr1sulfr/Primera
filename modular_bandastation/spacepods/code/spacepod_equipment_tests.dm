@@ -81,6 +81,82 @@
 		TEST_ASSERT(!QDELETED(cargo_item), "[removal] destroyed an item inside the loaded crate.")
 		TEST_ASSERT_EQUAL(cargo_item.loc, crate, "[removal] separated the crate from its contents.")
 
+/// Successful pilot movement collects only ore, across the entire destination footprint.
+/datum/unit_test/spacepod_equipment_ore_collection
+	var/obj/item/spacepod_equipment/cargo/interrupted_cargo
+	var/collection_interrupted = FALSE
+
+/datum/unit_test/spacepod_equipment_ore_collection/Destroy()
+	interrupted_cargo = null
+	return ..()
+
+/datum/unit_test/spacepod_equipment_ore_collection/proc/on_ore_moved(obj/item/stack/ore/source)
+	SIGNAL_HANDLER
+	if(!interrupted_cargo?.storage || source.loc != interrupted_cargo.storage)
+		return
+	// A synchronous movement callback can remove the box before the next ore is visited.
+	collection_interrupted = interrupted_cargo.unload()
+
+/datum/unit_test/spacepod_equipment_ore_collection/Run()
+	var/turf/origin = locate(run_loc_floor_bottom_left.x + 2, run_loc_floor_bottom_left.y + 2, run_loc_floor_bottom_left.z)
+	var/turf/destination = get_step(origin, EAST)
+	var/list/footprint = block(destination, locate(destination.x + 1, destination.y + 1, destination.z))
+	var/list/ore_types = list(/obj/item/stack/ore/iron, /obj/item/stack/ore/plasma, /obj/item/stack/ore/gold, /obj/item/stack/ore/silver)
+	for(var/scenario in list("loaded_ore", "empty_ore", "loaded_crate", "interrupted_ore"))
+		var/obj/vehicle/sealed/spacepod/pod = allocate(__IMPLIED_TYPE__, origin)
+		var/mob/living/carbon/human/consistent/pilot = allocate(__IMPLIED_TYPE__, get_step(origin, SOUTH))
+		TEST_ASSERT(pod.mob_enter(pilot, silent = TRUE), "The pilot could not board for ore collection [scenario].")
+		var/obj/item/spacepod_equipment/cargo/cargo = allocate(scenario == "loaded_crate" ? /obj/item/spacepod_equipment/cargo/crate : /obj/item/spacepod_equipment/cargo/ore, pod)
+		TEST_ASSERT(pod.add_equipment(null, cargo, cargo.slot), "The cargo module could not be installed for [scenario].")
+		var/obj/stored_container
+		if(scenario != "empty_ore")
+			stored_container = allocate(scenario == "loaded_crate" ? /obj/structure/closet/crate : /obj/structure/ore_box, cargo)
+			cargo.storage = stored_container
+		var/list/ores = list()
+		var/list/junk = list()
+		var/tile_index = 0
+		for(var/turf/tile as anything in footprint)
+			tile_index++
+			var/obj/item/stack/ore/ore = allocate(ore_types[tile_index], tile, tile_index)
+			ores[ore] = tile
+			var/obj/item/flashlight/item = allocate(__IMPLIED_TYPE__, tile)
+			junk[item] = tile
+			if(scenario == "interrupted_ore")
+				RegisterSignal(ore, COMSIG_MOVABLE_MOVED, PROC_REF(on_ore_moved))
+		collection_interrupted = FALSE
+		interrupted_cargo = scenario == "interrupted_ore" ? cargo : null
+		var/initial_charge = pod.battery.charge
+		TEST_ASSERT(pod.relaymove(pilot, EAST), "Real pilot movement failed for ore collection [scenario].")
+		TEST_ASSERT_EQUAL(pod.loc, destination, "Ore collection [scenario] did not move exactly one tile east.")
+		TEST_ASSERT_EQUAL(length(pod.locs - footprint), 0, "Ore collection [scenario] used the wrong destination footprint.")
+		TEST_ASSERT_EQUAL(pod.battery.charge, initial_charge - SPACEPOD_ENERGY_UNIT, "Ore collection [scenario] changed the ordinary movement energy cost.")
+		var/collected = 0
+		tile_index = 0
+		for(var/obj/item/stack/ore/ore as anything in ores)
+			tile_index++
+			UnregisterSignal(ore, COMSIG_MOVABLE_MOVED)
+			TEST_ASSERT(!QDELETED(ore), "Ore collection [scenario] deleted an original ore stack.")
+			TEST_ASSERT_EQUAL(ore.get_amount(), tile_index, "Ore collection [scenario] changed a stack's amount.")
+			if(ore.loc == stored_container)
+				collected++
+			else
+				TEST_ASSERT_EQUAL(ore.loc, ores[ore], "Ore collection [scenario] misplaced an uncollected ore stack.")
+		for(var/obj/item/item as anything in junk)
+			TEST_ASSERT_EQUAL(item.loc, junk[item], "Ore collection [scenario] collected a non-ore item.")
+		TEST_ASSERT_EQUAL(collected, scenario == "loaded_ore" ? 4 : scenario == "interrupted_ore" ? 1 : 0, "Ore collection [scenario] collected the wrong number of footprint stacks.")
+		if(scenario == "interrupted_ore")
+			TEST_ASSERT(collection_interrupted, "The first ore did not exercise synchronous cargo removal.")
+			TEST_ASSERT_NULL(cargo.storage, "Collection resumed after a movement callback removed its storage.")
+			TEST_ASSERT_EQUAL(stored_container.loc, destination, "The interrupted collection did not unload the original box.")
+		else
+			TEST_ASSERT_EQUAL(cargo.storage, stored_container, "Ore collection [scenario] changed its storage ownership.")
+		interrupted_cargo = null
+		qdel(pod)
+		qdel(pilot)
+		QDEL_LIST(ores)
+		QDEL_LIST(junk)
+		qdel(stored_container)
+
 /// Native movable teardown deletes contents, so auxiliary storage must explicitly release its loot.
 /datum/unit_test/spacepod_equipment_loot_survival/Run()
 	for(var/removal in list("delete_module", "delete_pod"))

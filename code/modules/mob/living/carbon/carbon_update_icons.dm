@@ -550,7 +550,9 @@ GLOBAL_LIST_EMPTY(masked_leg_icons_cache)
 			return 'icons/mob/clothing/head/default.dmi'
 		if(ITEM_SLOT_EYES)
 			return 'icons/mob/clothing/eyes.dmi'
-		if(ITEM_SLOT_EARS)
+		// AI EDIT START - Support independent left and right ear slots
+		if(ITEM_SLOT_EAR_RIGHT, ITEM_SLOT_EAR_LEFT, ITEM_SLOT_EARS) // BANDASTATION EDIT - Separate ear slots and item masks
+		// AI EDIT END
 			return 'icons/mob/clothing/ears.dmi'
 		if(ITEM_SLOT_MASK)
 			return 'icons/mob/clothing/mask.dmi'
@@ -577,7 +579,9 @@ GLOBAL_LIST_EMPTY(masked_leg_icons_cache)
 			return HEAD_LAYER
 		if(ITEM_SLOT_EYES)
 			return GLASSES_LAYER
-		if(ITEM_SLOT_EARS)
+		// AI EDIT START - Support independent left and right ear slots
+		if(ITEM_SLOT_EAR_RIGHT, ITEM_SLOT_EAR_LEFT, ITEM_SLOT_EARS) // BANDASTATION EDIT - Separate ear slots and item masks
+		// AI EDIT END
 			return EARS_LAYER
 		if(ITEM_SLOT_MASK)
 			return FACEMASK_LAYER

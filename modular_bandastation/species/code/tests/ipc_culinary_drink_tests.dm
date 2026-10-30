@@ -41,7 +41,10 @@
 		rootbeer.last_check_time = -10 SECONDS
 		TEST_ASSERT_EQUAL(drinker.get_food_taste_reaction(rootbeer, rootbeer.drink_type), FOOD_LIKED, "The actual root-beer fixture is not a liked drink.")
 		TEST_ASSERT_EQUAL(rootbeer.try_drink(drinker, drinker), ITEM_INTERACT_SUCCESS, "The actual root-beer drinking fixture failed.")
-		TEST_ASSERT_NOTNULL(drinker.mob_mood.mood_events["fav_food"], "A real liked drink did not produce its usual food mood event for [drinker.dna.species.type].")
+		if(drinker == human)
+			TEST_ASSERT_NULL(drinker.mob_mood.mood_events["fav_food"], "A liked drink gave an IPC a food mood event.")
+		else
+			TEST_ASSERT_NOTNULL(drinker.mob_mood.mood_events["fav_food"], "A real liked drink did not produce its usual organic food mood event.")
 		TEST_ASSERT_EQUAL(rootbeer.reagents.total_volume, 30 - rootbeer.gulp_size, "The liked-drink mood control consumed an incorrect portion.")
 	TEST_ASSERT_EQUAL(human.nutrition, 100, "A liked drink charged the IPC battery.")
 

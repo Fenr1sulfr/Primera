@@ -20,6 +20,54 @@
 	TEST_ASSERT_NULL(human.get_organ_by_type(/obj/item/organ/quills/vox), "Human retained vox quills.")
 	TEST_ASSERT_NULL(human.get_organ_by_type(/obj/item/organ/tail/vox), "Human retained a vox tail.")
 
+/// The speech component owns the accent, including when its tongue moves between speakers.
+/datum/unit_test/vox_speech_modifiers
+	parent_type = /datum/unit_test/speech_modifiers
+
+/datum/unit_test/vox_speech_modifiers/Run()
+	var/mob/living/carbon/human/vox = allocate(/mob/living/carbon/human/consistent)
+	vox.set_species(/datum/species/vox)
+	var/mob/living/carbon/human/recipient = allocate(/mob/living/carbon/human/consistent)
+	recipient.grant_language(/datum/language/vox, ALL)
+	var/obj/item/organ/tongue/vox/tongue = vox.get_organ_slot(ORGAN_SLOT_TONGUE)
+	TEST_ASSERT_NOTNULL(tongue, "The speech fixture did not receive a Vox tongue.")
+	allocated += tongue
+	var/quote = "КК кк ЧЧ чч"
+	var/list/expected_messages = list(
+		/datum/language/common = "КИК кик ЧИЧ чич",
+		/datum/language/vox = quote,
+	)
+	var/mob/living/carbon/human/previous_speaker
+	for(var/mob/living/carbon/human/speaker as anything in list(vox, recipient, vox))
+		if(previous_speaker)
+			tongue.Remove(previous_speaker, special = TRUE)
+			var/obj/item/organ/tongue/replacement = allocate(/obj/item/organ/tongue)
+			TEST_ASSERT(replacement.Insert(previous_speaker, special = TRUE), "The previous speaker could not receive an ordinary tongue.")
+			RegisterSignal(previous_speaker, COMSIG_MOB_SAY, TYPE_PROC_REF(/datum/unit_test/speech_modifiers, handle_speech))
+			previous_speaker.set_active_language(/datum/language/common)
+			handle_speech_result = null
+			previous_speaker.say(quote, ignore_spam = TRUE)
+			TEST_ASSERT_NOTNULL(handle_speech_result, "The previous speaker could not speak after tongue removal.")
+			TEST_ASSERT_EQUAL(handle_speech_result[SPEECH_MESSAGE], quote, "A removed Vox tongue still modified its former owner's speech.")
+			UnregisterSignal(previous_speaker, COMSIG_MOB_SAY)
+			TEST_ASSERT(tongue.Insert(speaker, special = TRUE), "The Vox tongue could not be transplanted or reinserted.")
+		RegisterSignal(speaker, COMSIG_MOB_SAY, TYPE_PROC_REF(/datum/unit_test/speech_modifiers, handle_speech))
+		for(var/language in expected_messages)
+			speaker.set_active_language(language)
+			handle_speech_result = null
+			speaker.say(quote, ignore_spam = TRUE)
+			TEST_ASSERT_NOTNULL(handle_speech_result, "The tongue's current owner could not speak [language].")
+			TEST_ASSERT_EQUAL(handle_speech_result[SPEECH_MESSAGE], expected_messages[language], "The Vox accent was missing, repeated, or applied to its native language.")
+		speaker.set_active_language(/datum/language/common)
+		ADD_TRAIT(speaker, TRAIT_SIGN_LANG, TRAIT_SOURCE_UNIT_TESTS)
+		handle_speech_result = null
+		speaker.say(quote, ignore_spam = TRUE)
+		REMOVE_TRAIT(speaker, TRAIT_SIGN_LANG, TRAIT_SOURCE_UNIT_TESTS)
+		TEST_ASSERT_NOTNULL(handle_speech_result, "The speech fixture could not sign.")
+		TEST_ASSERT_EQUAL(handle_speech_result[SPEECH_MESSAGE], quote, "The Vox accent modified signed speech.")
+		UnregisterSignal(speaker, COMSIG_MOB_SAY)
+		previous_speaker = speaker
+
 /// Exercise the real gas exchange, suffocation alerts and oxygen toxicity code.
 /datum/unit_test/vox_breathing
 	parent_type = /datum/unit_test/lungs
@@ -236,7 +284,11 @@
 	TEST_ASSERT_NOTNULL(food, "Vox click did not add the electronics food component.")
 	var/obj/item/food/vox_snack/snack = food.snack
 	TEST_ASSERT_EQUAL(LAZYACCESS(human.do_afters, human), 1, "The first click did not start exactly one pending bite.")
+	var/datum/qdel_item/food_deletions = SSgarbage.items[/datum/component/vox_food]
+	var/deletions_before = food_deletions?.qdels || 0
 	TEST_ASSERT(item.pre_attack(human, human, list(), list()), "Repeated vox click did not enter the electronics eating interaction.")
+	food_deletions = SSgarbage.items[/datum/component/vox_food]
+	TEST_ASSERT_EQUAL(food_deletions?.qdels || 0, deletions_before, "Repeated clicking created and deleted an unnecessary food component.")
 	TEST_ASSERT_EQUAL(LAZYACCESS(human.do_afters, human), 1, "Repeated clicks started parallel pending bites.")
 	TEST_ASSERT_EQUAL(item.GetComponent(/datum/component/vox_food), food, "Repeated click replaced the owned food component.")
 	TEST_ASSERT_EQUAL(food.snack, snack, "Repeated click replaced its pending meal proxy.")
@@ -420,3 +472,29 @@
 	heart.on_death(60)
 	TEST_ASSERT(heart.damage > extracted_damage, "A transplanted vox heart did not decay inside an unprotected organic owner.")
 	TEST_ASSERT(!(heart.organ_flags & ORGAN_FROZEN), "Transplanted vox tissue retained a permanent frozen flag.")
+
+/// Oxygen injury must survive death without becoming decay or being described as proven putrefaction.
+/datum/unit_test/vox_lung_failure_description
+	parent_type = /datum/unit_test/lungs
+
+/datum/unit_test/vox_lung_failure_description/Run()
+	var/mob/living/carbon/human/vox = allocate(/mob/living/carbon/human/consistent)
+	vox.set_species(/datum/species/vox)
+	var/obj/item/organ/lungs/vox/lungs = vox.get_organ_slot(ORGAN_SLOT_LUNGS)
+	lungs_test_check_breath("oxygen injury before death", vox, lungs, create_standard_mix())
+	TEST_ASSERT(vox.stat != DEAD, "A single ordinary breath killed the oxygen-injury fixture.")
+	TEST_ASSERT(lungs.damage > 0 && lungs.damage < lungs.maxHealth, "Oxygen did not cause measurable, non-saturated lung damage.")
+	var/oxygen_damage = lungs.damage
+	vox.death()
+	TEST_ASSERT(HAS_TRAIT(vox, TRAIT_NODECAY), "The dead Vox lost its preservation trait.")
+	vox.bodytemperature = BODYTEMP_NORMAL
+	vox.Life(45 MINUTES / (1 SECONDS))
+	lungs.process(60)
+	TEST_ASSERT_EQUAL(lungs.owner, vox, "The dead Vox lost physical ownership of its lungs.")
+	TEST_ASSERT_EQUAL(lungs.damage, oxygen_damage, "The dead Vox's lungs decayed or their oxygen injury was silently repaired.")
+	lungs.apply_organ_damage(lungs.maxHealth)
+	TEST_ASSERT(lungs.organ_flags & ORGAN_FAILING, "Critical injury did not produce lung failure.")
+	var/failure_text = jointext(lungs.examine(vox), "\n")
+	TEST_ASSERT(!findtext(failure_text, "разлож"), "Lung failure from injury was falsely described as decomposition.")
+	TEST_ASSERT(findtext(failure_text, "не функционирует"), "Examining critically injured lungs no longer reports their loss of function.")
+	TEST_ASSERT_EQUAL(lungs.damage, lungs.maxHealth, "Examining critically injured lungs repaired their damage.")

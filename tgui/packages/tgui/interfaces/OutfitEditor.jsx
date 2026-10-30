@@ -70,7 +70,19 @@ export const OutfitEditor = (props) => {
             <Stack mb={2}>
               <OutfitSlot name="Headgear" icon="hard-hat" slot="head" />
               <OutfitSlot name="Glasses" icon="glasses" slot="glasses" />
-              <OutfitSlot name="Ears" icon="headphones-alt" slot="ears" />
+              {/* AI EDIT START - Expose both ear slots in the outfit editor */}
+              {/* BANDASTATION EDIT - Dual ear slots */}
+              <OutfitSlot
+                name="Right Ear"
+                icon="headphones-alt"
+                slot="ear_right"
+              />
+              <OutfitSlot
+                name="Left Ear"
+                icon="headphones-alt"
+                slot="ear_left"
+              />
+              {/* AI EDIT END */}
             </Stack>
             <Stack mb={2}>
               <OutfitSlot name="Neck" icon="stethoscope" slot="neck" />

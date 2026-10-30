@@ -100,6 +100,52 @@
 	SIGNAL_HANDLER
 	movement_events += list(list("from" = old_loc, "to" = source.loc, "old_locs" = old_locs?.Copy()))
 
+/// Count dispatches while retaining the real transition validation and movement.
+/turf/open/floor/iron/spacepod_transition_counter
+	var/transfer_calls = 0
+
+/turf/open/floor/iron/spacepod_transition_counter/transfer_occupant(atom/movable/occupant)
+	transfer_calls++
+	return ..()
+
+/// Ordinary floor movement and turf initialization must not enter the sector-transfer path.
+/datum/unit_test/spacepod_transition/ordinary_floor/Run()
+	var/turf/origin = locate(run_loc_floor_bottom_left.x + 1, run_loc_floor_bottom_left.y + 1, run_loc_floor_bottom_left.z)
+	var/turf/changed = get_step(origin, NORTH)
+	var/original_type = changed.type
+	replaced_turfs += list(list(changed.x, changed.y, changed.z, original_type))
+	var/turf/open/floor/iron/spacepod_transition_counter/floor = changed.ChangeTurf(/turf/open/floor/iron/spacepod_transition_counter, flags = CHANGETURF_IGNORE_AIR)
+	var/obj/mover = allocate(/obj, origin)
+	floor.transfer_calls = 0
+	TEST_ASSERT(mover.Move(floor, NORTH), "The ordinary floor fixture could not perform a real movement step.")
+	TEST_ASSERT_EQUAL(mover.loc, floor, "Avoiding sector checks changed ordinary movement.")
+	TEST_ASSERT_EQUAL(floor.transfer_calls, 0, "An ordinary floor's Entered callback dispatched sector-transfer work.")
+
+	// ChangeTurf initializes the occupant already standing on the replacement turf.
+	changed = floor.ChangeTurf(original_type, flags = CHANGETURF_IGNORE_AIR)
+	floor = changed.ChangeTurf(/turf/open/floor/iron/spacepod_transition_counter, flags = CHANGETURF_IGNORE_AIR)
+	TEST_ASSERT_EQUAL(mover.loc, floor, "Initializing the replacement floor moved its existing occupant.")
+	TEST_ASSERT_EQUAL(floor.transfer_calls, 0, "An ordinary floor's initialization dispatched sector-transfer work.")
+
+	var/turf/arrival = get_step(floor, EAST)
+	floor.destination_x = arrival.x
+	floor.destination_y = arrival.y
+	floor.destination_z = arrival.z
+	TEST_ASSERT(mover.forceMove(origin), "The true-border control could not return to its starting turf.")
+	floor.transfer_calls = 0
+	TEST_ASSERT(mover.Move(floor, NORTH), "The true-border control could not enter its configured transition.")
+	TEST_ASSERT_EQUAL(floor.transfer_calls, 1, "A configured border did not dispatch exactly one native transition.")
+	TEST_ASSERT_EQUAL(mover.loc, arrival, "The floor fast path also suppressed a configured border transition.")
+
+	TEST_ASSERT(mover.forceMove(origin), "The initialized-border control could not return to its starting turf.")
+	floor.destination_z = null
+	TEST_ASSERT(mover.forceMove(floor), "The initialized-border control could not occupy its test turf.")
+	floor.destination_z = arrival.z
+	floor.transfer_calls = 0
+	floor.initialize_occupant(mover)
+	TEST_ASSERT_EQUAL(floor.transfer_calls, 1, "Initializing a configured border did not dispatch exactly one native transition.")
+	TEST_ASSERT_EQUAL(mover.loc, arrival, "The initialization fast path also suppressed a configured border transition.")
+
 /// The first boundary-touching step must transfer in either direction, without a second movement or timer.
 /datum/unit_test/spacepod_transition/cardinals/Run()
 	for(var/direction in GLOB.cardinals)

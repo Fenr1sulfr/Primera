@@ -38,7 +38,9 @@
 	id_trim = /datum/id_trim/job/bitrunner
 	uniform = /obj/item/clothing/under/rank/cargo/bitrunner
 	belt = /obj/item/modular_computer/pda/crew/bitrunner
-	ears = /obj/item/radio/headset/headset_cargo
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/headset_cargo // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 
 /datum/job/bit_avatar
 	title = "Bit Avatar"

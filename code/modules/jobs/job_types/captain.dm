@@ -72,7 +72,9 @@
 		/obj/item/station_charter = 1,
 		)
 	belt = /obj/item/modular_computer/pda/crew/heads/captain
-	ears = /obj/item/radio/headset/heads/captain/alt
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/heads/captain/alt // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/sunglasses
 	gloves = /obj/item/clothing/gloves/captain
 	head = /obj/item/clothing/head/hats/caphat

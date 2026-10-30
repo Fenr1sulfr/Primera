@@ -76,7 +76,9 @@
 	// Won't be needing these
 	var/obj/id = invoker.get_item_by_slot(ITEM_SLOT_ID)
 	QDEL_NULL(id)
-	var/obj/headset = invoker.get_item_by_slot(ITEM_SLOT_EARS)
+	// AI EDIT START - Support independent left and right ear slots
+	var/obj/headset = invoker.get_item_by_slot(ITEM_SLOT_EAR_RIGHT) // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	QDEL_NULL(headset)
 	// We're about to take off your pants so those are going to fall out
 	var/obj/item/pocket_L = invoker.get_item_by_slot(ITEM_SLOT_LPOCKET)
@@ -101,7 +103,9 @@
 	id_trim = /datum/id_trim/job/captain
 	uniform = /obj/item/clothing/under/rank/captain/parade
 	belt = /obj/item/modular_computer/pda/crew/heads/captain
-	ears = /obj/item/radio/headset/heads/captain/alt
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/heads/captain/alt // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/sunglasses
 	gloves = /obj/item/clothing/gloves/captain
 	shoes = /obj/item/clothing/shoes/laceup

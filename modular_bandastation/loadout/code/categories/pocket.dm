@@ -11,6 +11,12 @@
 	name = "Папка"
 	item_path = /obj/item/folder
 
+// AI EDIT START - Add the pAI device to the miscellaneous loadout
+/datum/loadout_item/pocket_items/pai_card
+	name = "Планшет ПИИ"
+	item_path = /obj/item/pai_card
+// AI EDIT END
+
 // MARK: Tier 2
 /datum/loadout_item/pocket_items/golden_mug
 	name = "Золотая кружка"

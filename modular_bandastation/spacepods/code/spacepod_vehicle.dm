@@ -356,9 +356,7 @@
 	return TRUE
 
 /obj/vehicle/sealed/spacepod/relaymove(mob/living/user, direction)
-	if(!can_control(user) || !direction)
-		if(user == pilot)
-			stop_engine_sound()
+	if(user != pilot)
 		return FALSE
 	return vehicle_move(direction)
 
@@ -400,9 +398,7 @@
 	else
 		stop_engine_sound()
 	if(. && cargo_system)
-		for(var/turf/pod_turf as anything in locs)
-			for(var/obj/item/item in pod_turf)
-				cargo_system.passover(item)
+		cargo_system.passover(locs)
 
 /obj/vehicle/sealed/spacepod/proc/emit_thrust_effect(turf/previous_turf, glide_duration)
 	if(!previous_turf || !isturf(loc) || previous_turf == loc || previous_turf.has_gravity() || has_gravity())

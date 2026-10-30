@@ -57,7 +57,9 @@
 	id_trim = /datum/id_trim/job/prisoner
 	uniform = /obj/item/clothing/under/rank/prisoner
 	belt = null
-	ears = null
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = null // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/sneakers/orange
 	box = /obj/item/storage/box/survival/prisoner
 	pda_slot = null

@@ -39,8 +39,10 @@
 		return
 
 	var/mob/user = atom_parent.loc
-	if (!isnull(item_slot) && user.get_item_by_slot(item_slot) != parent)
+	// AI EDIT START - Match callout equipment against slot masks
+	if (!isnull(item_slot) && !(user.get_slot_by_item(parent) & item_slot)) // BANDASTATION EDIT - Support slot masks
 		return
+	// AI EDIT END
 
 	RegisterSignal(atom_parent.loc, COMSIG_MOB_CLICKON, PROC_REF(on_click))
 	cur_user = atom_parent.loc

@@ -34,7 +34,9 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(cmd_admin_headset_message, R_ADMIN, "Headset Messag
 
 	if(ishuman(target))
 		human_recipient = target
-		if(!istype(human_recipient.ears, /obj/item/radio/headset))
+		// AI EDIT START - Support independent left and right ear slots
+		if(!istype(human_recipient.ear_right, /obj/item/radio/headset) && !istype(human_recipient.ear_left, /obj/item/radio/headset)) // BANDASTATION EDIT - Dual ear slots
+		// AI EDIT END
 			to_chat(usr, "The person you are trying to contact is not wearing a headset.", confidential = TRUE)
 			return
 	else if(issilicon(target))

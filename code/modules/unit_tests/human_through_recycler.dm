@@ -32,7 +32,12 @@
 	TEST_ASSERT_NULL(assistant.shoes, "Assistant still has shoes on after being put through an emagged recycler!")
 	TEST_ASSERT_NULL(assistant.belt, "Assistant still has an item in their belt slot after being put through an emagged recycler!")
 	TEST_ASSERT_NULL(assistant.back, "Assistant still has an item in their back slot (backpack) after being put through an emagged recycler!")
-	TEST_ASSERT_NULL(assistant.ears, "Assistant still has a headset on after being put through an emagged recycler!")
+	// AI EDIT START - Dual ear slots
+	// BANDASTATION EDIT START - Dual ear slots
+	TEST_ASSERT_NULL(assistant.ear_right, "Assistant still has an item on their right ear after being put through an emagged recycler!")
+	TEST_ASSERT_NULL(assistant.ear_left, "Assistant still has an item on their left ear after being put through an emagged recycler!")
+	// BANDASTATION EDIT END
+	// AI EDIT END
 
 	// This category is stuff that shouldn't exist in the first place, but let's test it anyways in case we decide consistent assistants should have more clothing in the future.
 	// Short point short, if any of the following error and none of these are present in the datum for this outfit, what the fuck?

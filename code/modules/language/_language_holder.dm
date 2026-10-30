@@ -330,10 +330,6 @@ Key procs
 			if(mind_understanding > 0)
 				remove_partial_language(language, source)
 				to_holder.grant_partial_language(language, mind_understanding, source)
-
-	if(ishuman(to_holder.owner) && to_holder.has_sierra_background_languages())
-		var/mob/living/carbon/human/recipient = to_holder.owner
-		recipient.remove_sierra_species_languages()
 	// BANDASTATION EDIT END
 
 	if(owner)

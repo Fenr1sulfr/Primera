@@ -8,7 +8,9 @@
 	shoes = /obj/item/clothing/shoes/jackboots
 	mask = /obj/item/clothing/mask/gas/sechailer/swat/spacepol
 	glasses = /obj/item/clothing/glasses/sunglasses
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	l_pocket = /obj/item/ammo_box/magazine/m45
 	r_pocket = /obj/item/restraints/handcuffs
 	id = /obj/item/card/id/advanced/bountyhunter
@@ -37,7 +39,9 @@
 	suit = /obj/item/clothing/suit/armor/bulletproof
 	suit_store = /obj/item/gun/ballistic/rifle/boltaction
 	back = /obj/item/storage/backpack
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/sunglasses
 	gloves = /obj/item/clothing/gloves/tackler/combat
 	head = /obj/item/clothing/head/helmet/alt
@@ -107,7 +111,9 @@
 	shoes = /obj/item/clothing/shoes/jackboots
 	mask = /obj/item/clothing/mask/gas/hunter
 	glasses = /obj/item/clothing/glasses/sunglasses/gar
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	r_pocket = /obj/item/restraints/handcuffs/cable
 	l_pocket = /obj/item/ammo_box/magazine/m9mm/fire
 	id = /obj/item/card/id/advanced/bountyhunter
@@ -132,7 +138,9 @@
 	back = /obj/item/storage/backpack
 	head = /obj/item/clothing/head/costume/scarecrow_hat
 	gloves = /obj/item/clothing/gloves/botanic_leather
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/jackboots
 	mask = /obj/item/clothing/mask/scarecrow
 	r_pocket = /obj/item/restraints/handcuffs/cable
@@ -159,7 +167,9 @@
 	shoes = /obj/item/clothing/shoes/jackboots
 	glasses = /obj/item/clothing/glasses/eyepatch
 	r_pocket = /obj/item/restraints/handcuffs/cable
-	ears = /obj/item/radio/headset
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	id = /obj/item/card/id/advanced/bountyhunter
 	r_hand = /obj/item/storage/medkit/regular
 
@@ -193,7 +203,9 @@
 	glasses = null
 	head = null
 	glasses = /obj/item/clothing/glasses/trickblindfold
-	ears = /obj/item/radio/headset/psyker
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/psyker // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	uniform = /obj/item/clothing/under/pants/track
 	gloves = /obj/item/clothing/gloves/fingerless
 	shoes = /obj/item/clothing/shoes/jackboots
@@ -216,7 +228,9 @@
 /datum/outfit/psyker_seer
 	name = "Psyker-Shikari Seer"
 	glasses = /obj/item/clothing/glasses/thermal/monocle
-	ears = /obj/item/radio/headset/psyker_seer
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/psyker_seer // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	uniform = /obj/item/clothing/under/pants/jeans
 	suit = /obj/item/clothing/suit/hazardvest
 	gloves = /obj/item/clothing/gloves/fingerless
@@ -239,7 +253,9 @@
 	name = "\improper MI13 Fugitive Retrieval Agent"
 	uniform = /obj/item/clothing/under/syndicate/sniper
 	back = /obj/item/storage/backpack/satchel/leather
-	ears = /obj/item/radio/headset/syndicate
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/syndicate // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/sunglasses
 	gloves = /obj/item/clothing/gloves/combat
 	shoes = /obj/item/clothing/shoes/laceup

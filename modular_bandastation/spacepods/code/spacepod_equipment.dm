@@ -7,7 +7,6 @@
 	var/obj/vehicle/sealed/spacepod/my_atom
 	var/slot
 	var/occupant_mod = 0
-	var/list/storage_mod = list("slots" = 0, "w_class" = 0)
 
 /obj/item/spacepod_equipment/Destroy()
 	if(my_atom)
@@ -318,7 +317,7 @@
 	storage = null
 	return TRUE
 
-/obj/item/spacepod_equipment/cargo/proc/passover(obj/item/item)
+/obj/item/spacepod_equipment/cargo/proc/passover(list/footprint)
 	return
 
 /obj/item/spacepod_equipment/cargo/ore
@@ -327,9 +326,13 @@
 	desc = "Вмещает рудный ящик и собирает в него руду, над которой пролетает челнок."
 	icon_state = "cargo_ore"
 
-/obj/item/spacepod_equipment/cargo/ore/passover(obj/item/item)
-	if(storage && istype(item, /obj/item/stack/ore))
-		item.forceMove(storage)
+/obj/item/spacepod_equipment/cargo/ore/passover(list/footprint)
+	if(!storage)
+		return
+	for(var/turf/pod_turf as anything in footprint)
+		for(var/obj/item/stack/ore/ore in pod_turf)
+			if(storage)
+				ore.forceMove(storage)
 
 /obj/item/spacepod_equipment/cargo/crate
 	custom_materials = list(/datum/material/iron = SHEET_MATERIAL_AMOUNT * 12.5)
@@ -425,7 +428,6 @@
 	name = "spacepod loot storage module"
 	desc = "Небольшой грузовой отсек под сиденьем челнока."
 	icon_state = "sec_cargo_loot"
-	storage_mod = list("slots" = 7, "w_class" = 14)
 
 /obj/item/spacepod_equipment/sec_cargo/loot_box/Initialize(mapload)
 	. = ..()

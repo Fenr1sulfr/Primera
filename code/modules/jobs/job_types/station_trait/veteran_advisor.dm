@@ -75,7 +75,9 @@
 	mask = /obj/item/cigarette/cigar
 	suit = /obj/item/clothing/suit/jacket/leather_trenchcoat
 	accessory = /obj/item/clothing/accessory/holster/detective/veteran_advisor // BANDASTATION EDIT: Accessory holsters
-	ears = /obj/item/radio/headset/heads/hos/advisor
+	// AI EDIT START - Support independent left and right ear slots
+	ear_right = /obj/item/radio/headset/heads/hos/advisor // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/eyepatch
 	shoes = /obj/item/clothing/shoes/jackboots
 	l_pocket = /obj/item/coin/antagtoken

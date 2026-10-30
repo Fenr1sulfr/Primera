@@ -388,6 +388,14 @@
 		if (!isnull(item))
 			result["icon"] = icon2base64(icon(item.icon, item.icon_state, frame = 1))
 			result["name"] = item.name
+			// AI EDIT START - Multi-slot clothing
+			// BANDASTATION ADDITION START - Multi-slot clothing
+			var/datum/strippable_item/mob_item_slot/mob_slot = item_data
+			if(istype(mob_slot) && ismob(owner))
+				var/mob/wearer = owner
+				result["secondary_slot"] = wearer.get_slot_by_item(item) != mob_slot.item_slot
+			// BANDASTATION ADDITION END
+			// AI EDIT END
 		result["alternate"] = item_data.get_alternate_actions(owner, user, item)
 		list_clear_nulls(result["alternate"])
 		result["alternate_icons"] = item_data.get_alternate_action_icons(owner, user, item)

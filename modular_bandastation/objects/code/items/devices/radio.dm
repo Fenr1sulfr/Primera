@@ -11,6 +11,12 @@
 	desc = "The headset of the guy who keeps the administration alive."
 	icon_state = "com_headset"
 	worn_icon_state = "com_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "com_headset_right",
+		ITEM_SLOT_EAR_LEFT = "com_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/heads/blueshield
 
 /obj/item/radio/headset/blueshield/alt
@@ -18,10 +24,18 @@
 	desc = "The headset of the guy who keeps the administration alive. Protects your ears from flashbangs."
 	icon_state = "com_headset_alt"
 	worn_icon_state = "com_headset_alt"
+	// AI EDIT START - Keep protected earpieces on their original worn state
+	worn_icon_state_by_slot = null
+	// AI EDIT END
 
 /obj/item/radio/headset/blueshield/alt/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/wearertargeting/earprotection, list(ITEM_SLOT_EARS))
+	// AI EDIT START - Support independent ear inventory slots
+	AddComponent(/datum/component/wearertargeting/earprotection)
+	// AI EDIT END
+	// AI EDIT START - Reserve both ear slots for protected earpieces
+	AddComponent(/datum/component/occupies_slots, ITEM_SLOT_EARS)
+	// AI EDIT END
 
 // Nanotrasen Representative
 /obj/item/encryptionkey/heads/nanotrasen_representative
@@ -36,6 +50,12 @@
 	desc = "The headset of the guy who keeps the administration alive."
 	icon_state = "com_headset"
 	worn_icon_state = "com_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "com_headset_right",
+		ITEM_SLOT_EAR_LEFT = "com_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/heads/nanotrasen_representative
 
 /obj/item/radio/headset/heads/nanotrasen_representative/alt
@@ -43,10 +63,18 @@
 	desc = "The headset of the guy who keeps the administration alive. Protects your ears from flashbangs."
 	icon_state = "com_headset_alt"
 	worn_icon_state = "com_headset_alt"
+	// AI EDIT START - Keep protected earpieces on their original worn state
+	worn_icon_state_by_slot = null
+	// AI EDIT END
 
 /obj/item/radio/headset/heads/nanotrasen_representative/alt/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/wearertargeting/earprotection, list(ITEM_SLOT_EARS))
+	// AI EDIT START - Support independent ear inventory slots
+	AddComponent(/datum/component/wearertargeting/earprotection)
+	// AI EDIT END
+	// AI EDIT START - Reserve both ear slots for protected earpieces
+	AddComponent(/datum/component/occupies_slots, ITEM_SLOT_EARS)
+	// AI EDIT END
 
 // Magistrate
 /obj/item/encryptionkey/heads/magistrate
@@ -58,6 +86,12 @@
 	desc = "Я веселое описание."
 	icon_state = "com_headset"
 	worn_icon_state = "com_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "com_headset_right",
+		ITEM_SLOT_EAR_LEFT = "com_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/heads/magistrate
 
 /obj/item/radio/headset/heads/magistrate/alt
@@ -65,10 +99,18 @@
 	desc = "Я веселое описание. Защищает уши от громкого шума."
 	icon_state = "com_headset_alt"
 	worn_icon_state = "com_headset_alt"
+	// AI EDIT START - Keep protected earpieces on their original worn state
+	worn_icon_state_by_slot = null
+	// AI EDIT END
 
 /obj/item/radio/headset/heads/magistrate/alt/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/wearertargeting/earprotection, list(ITEM_SLOT_EARS))
+	// AI EDIT START - Support independent ear inventory slots
+	AddComponent(/datum/component/wearertargeting/earprotection)
+	// AI EDIT END
+	// AI EDIT START - Reserve both ear slots for protected earpieces
+	AddComponent(/datum/component/occupies_slots, ITEM_SLOT_EARS)
+	// AI EDIT END
 
 // Lawyer
 /obj/item/encryptionkey/lawyer
@@ -80,4 +122,10 @@
 	desc = "Простой наушник юриста, имеющий доступ к юридическому и каналу безопасности."
 	icon_state = "justice_headset"
 	worn_icon_state = "justice_headset"
+	// AI EDIT START - Choose baked headset sprites for each ear slot
+	worn_icon_state_by_slot = alist(
+		ITEM_SLOT_EAR_RIGHT = "justice_headset_right",
+		ITEM_SLOT_EAR_LEFT = "justice_headset_left",
+	)
+	// AI EDIT END
 	keyslot = /obj/item/encryptionkey/lawyer

@@ -18,6 +18,36 @@
 	var/datum/gas_mixture/reserve = pod.internal_tank?.return_air()
 	return (pod.cabin_air?.total_moles() || 0) + (reserve?.total_moles() || 0) + (exterior?.total_moles() || 0)
 
+/// Count full-mixture sums without replacing their native calculation.
+/datum/gas_mixture/spacepod_life_support_counter
+	var/total_moles_calls = 0
+
+/datum/gas_mixture/spacepod_life_support_counter/total_moles()
+	total_moles_calls++
+	return ..()
+
+/// Healthy oxygen needs no composition scan; low oxygen still compares both actual mixtures.
+/datum/unit_test/spacepod_life_support/oxygen_short_circuit/Run()
+	var/obj/vehicle/sealed/spacepod/civilian/pod = make_pod()
+	var/datum/gas_mixture/spacepod_life_support_counter/cabin = allocate(__IMPLIED_TYPE__, pod.cabin_air.volume)
+	cabin.copy_from(pod.cabin_air)
+	QDEL_NULL(pod.cabin_air)
+	pod.cabin_air = cabin
+	var/datum/gas_mixture/tank_air = pod.internal_tank.return_air()
+	var/datum/gas_mixture/spacepod_life_support_counter/reserve = allocate(__IMPLIED_TYPE__, tank_air.volume)
+	reserve.copy_from(tank_air)
+	TEST_ASSERT(!pod.needs_cabin_air_exchange(reserve), "Healthy cabin oxygen incorrectly requested fresh-air exchange.")
+	TEST_ASSERT_EQUAL(cabin.total_moles_calls, 0, "Healthy cabin oxygen unnecessarily summed the cabin mixture.")
+	TEST_ASSERT_EQUAL(reserve.total_moles_calls, 0, "Healthy cabin oxygen unnecessarily summed the reserve mixture.")
+	fill_cabin(pod, 2, 0)
+	TEST_ASSERT(pod.needs_cabin_air_exchange(reserve), "Low cabin oxygen did not request exchange from the real richer reserve mixture.")
+	TEST_ASSERT_EQUAL(cabin.total_moles_calls, 1, "Low-oxygen exchange did not sum the cabin mixture exactly once.")
+	TEST_ASSERT_EQUAL(reserve.total_moles_calls, 1, "Low-oxygen exchange did not sum the reserve mixture exactly once.")
+	reserve.copy_from(cabin)
+	TEST_ASSERT(!pod.needs_cabin_air_exchange(reserve), "Low oxygen requested exchange from an equally oxygen-poor reserve mixture.")
+	TEST_ASSERT_EQUAL(cabin.total_moles_calls, 2, "Comparing an unsuitable reserve skipped or repeated the real cabin sum.")
+	TEST_ASSERT_EQUAL(reserve.total_moles_calls, 2, "Comparing an unsuitable reserve skipped or repeated the real reserve sum.")
+
 /// A full-pressure CO2 cabin recovers in the real process path without deleting exhaust or creating fresh air.
 /datum/unit_test/spacepod_life_support/recovery/Run()
 	var/obj/vehicle/sealed/spacepod/civilian/pod = make_pod()

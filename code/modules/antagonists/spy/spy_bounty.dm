@@ -301,7 +301,8 @@
 	return TRUE
 
 /datum/spy_bounty/objective_item/is_stealable(atom/movable/stealing)
-	return istype(stealing, desired_item.targetitem) \
+	// BANDASTATION EDIT - Accept alternate targets for HoS sidearm theft.
+	return (istype(stealing, desired_item.targetitem) || (stealing?.type in desired_item.altitems)) \
 		&& !HAS_TRAIT(stealing, TRAIT_ITEM_OBJECTIVE_BLOCKED) \
 		&& desired_item.check_special_completion(stealing)
 

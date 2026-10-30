@@ -48,7 +48,9 @@
 	id_trim = /datum/id_trim/away/waystation/cargo_technician
 	uniform = /obj/item/clothing/under/rank/cargo/tech
 	belt = /obj/item/modular_computer/pda/crew/cargo
-	ears = /obj/item/radio/headset/headset_cargo
+	// AI EDIT START - Equip the cargo outfit in the right ear slot
+	ear_right = /obj/item/radio/headset/headset_cargo // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	shoes = /obj/item/clothing/shoes/sneakers/black
 
 /datum/outfit/waystation/qm
@@ -57,7 +59,9 @@
 	id_trim = /datum/id_trim/away/waystation/quartermaster
 	uniform = /obj/item/clothing/under/rank/cargo/qm
 	belt = /obj/item/modular_computer/pda/crew/heads/quartermaster
-	ears = /obj/item/radio/headset/headset_cargo
+	// AI EDIT START - Equip the quartermaster outfit in the right ear slot
+	ear_right = /obj/item/radio/headset/headset_cargo // BANDASTATION EDIT - Dual ear slots
+	// AI EDIT END
 	glasses = /obj/item/clothing/glasses/sunglasses
 	shoes = /obj/item/clothing/shoes/sneakers/brown
 
